@@ -1,0 +1,583 @@
+# recommenderVersion config: recommenderVersions:
+#   - name: "some-name"
+#     apiId: "api-id-for-escenic"
+#     model_selection_timeout_min: 300
+#     models: 
+#       - * see models config below *
+#
+# 
+# model config:
+# models:
+#     - modelName: "my-model-name"
+#     - modelNamePostfix: default=""
+#       split: 100
+#       candidateListId: "id-to-candidate-list"
+#       cacheMinutes: 0-600,default=180
+#       useContext: true|false,default=false
+#       useUserId: true|false,default=true
+#       wait_for_reply: true|false,default=false
+#       removeRead: true|false,default=false
+#       removeExposed: true|false,default=false
+#
+#
+# candidate list config:
+# candidateLists:
+#     - name: "candidate-list-name"
+#       type: "engage"
+#       id: "engage-list-id"
+#       shuffle: true|false,default=false
+#
+
+inviewAPIEndpoint: "https://eb-ml-pipeline-prod.com/inview-api/get-user-blacklist"
+
+recommenderVersions:
+  - name: "article-contrastive-similarity-prod"
+    apiId: "contrastive_artsim_prod"
+    models:
+        - modelName: "contrastive-similarity-prod"
+          split: 100
+          useContext: true
+          useUserId: false
+
+  
+  - name: "most-popular-last-24h"
+    apiId: "mpoppopm"
+    model_selection_timeout_min: 31
+    models:
+        - candidateListName: "most-popular-24h"
+          split: 100
+
+
+  ###
+  # Engage lists for plus
+  - name: "engage-PLUS-Most_read_7"
+    apiId: "engage-Most_read_7"
+    models:
+        - candidateListName: "PLUS-Most_read_7"
+          removeExposed: true
+          removeRead: true
+          split: 100
+
+  # Engage lists for new customers
+  - name: "new-customer-48h-565"
+    apiId: "new-customer-48h-565"
+    models:
+        - candidateListName: "most_read_30_days_premium_by_sections_565"
+          removeExposed: true
+          removeRead: true
+          wait_for_reply: true
+          split: 1
+
+  # Recommender +arkiv
+  - name: "recom-plus-section"
+    apiId: "noitces-sulp-mocer"
+    cacheKey: "+SEC2"
+    model_selection_timeout_min: 20160
+    allow_unhealthy_selection: true
+    models:
+        - modelName: "nrms-plus-app-spot"
+          modelNamePostfix: "-removeExposed"
+          removeExposed: true
+          candidateListName: "plus-candidatelist"
+          split: 1
+
+        - modelName: "recommender-lightfm"
+          modelNamePostfix: "-removeExposed"
+          removeExposed: true
+          candidateListName: "plus-candidatelist"
+          split: 1
+        
+  # Recommenders front
+  # Free skaleret til gratis
+  - name: "recom-front-free"
+    apiId: "free-nrms-front"
+    cacheKey: "Freenrms2"
+    model_selection_timeout_min: 44640
+    allow_unhealthy_selection: true
+    models:
+        # - modelName: "nrms-app"
+        #   modelNamePostfix: "-scaled"
+        #   removeExposed: true
+        #   candidateListName: "latest-plus-and-mpop-latest-all"
+        #   split: 1
+        - modelName: "nrms-app-spot"
+          modelNamePostfix: "-scaled"
+          removeExposed: true
+          candidateListName: "latest-plus-and-mpop-latest-all"
+          split: 2
+        # - modelName: "nrms-plus-app"
+        #   modelNamePostfix: "-scaled"
+        #   removeExposed: true
+        #   candidateListName: "latest-plus-and-mpop-latest-all"
+        #   split: 2
+        - modelName: "nrms-plus-app-spot"
+          modelNamePostfix: "-scaled"
+          removeExposed: true
+          candidateListName: "latest-plus-and-mpop-latest-all"
+          split: 2
+
+  - name: "recom-front"
+    apiId: "sota-rec-week2-front"
+    cacheKey: "PLUSvsFREEEx2"
+    model_selection_timeout_min: 44640
+    allow_unhealthy_selection: true
+    models:
+        # - modelName: "nrms-app"
+        #   modelNamePostfix: "-removeExposed"
+        #   removeExposed: true
+        #   candidateListName: "latest-plus-and-mpop-latest-all"
+        #   split: 1
+        - modelName: "nrms-app-spot"
+          modelNamePostfix: "-removeExposed"
+          removeExposed: true
+          candidateListName: "latest-plus-and-mpop-latest-all"
+          split: 2
+        - modelName: "nrms-plus-app-spot"
+          modelNamePostfix: "-removeExposed"
+          removeExposed: true
+          candidateListName: "latest-plus-and-mpop-latest-all"
+          split: 2
+
+  - name: "recom-front-plus"
+    apiId: "recom-front-plus"
+    cacheKey: "EXPOTES2"
+    model_selection_timeout_min: 44640
+    allow_unhealthy_selection: true
+    models:
+        - modelName: "nrms-app-spot"
+          modelNamePostfix: "-removeExposed"
+          removeExposed: true
+          candidateListName: "plus-candidatelist"
+          split: 2
+
+        # - modelName: "nrms-app"
+        #   candidateListName: "plus-candidatelist"
+        #   split: 1
+
+        - modelName: "nrms-app-spot"
+          candidateListName: "plus-candidatelist"
+          split: 2
+  
+  - name: "position-1-a"
+    apiId: "position-1-a"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "recsys_candidates_position_1_2_a"
+        removeExposed: true
+        candidateListLimit: 400
+        cacheMinutes: 720
+        split: 1
+        
+
+  - name: "position-1-b"
+    apiId: "position-1-b"
+    models:
+      - modelName:  "nrms-app-spot"
+        candidateListName: "recsys_candidates_position_1_2_5_b"
+        removeExposed: true
+        candidateListLimit: 400
+        cacheMinutes: 720
+        split: 1
+        
+
+  - name: "position-2-a"
+    apiId: "position-2-a"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "recsys_candidates_position_1_2_a"
+        removeExposed: true
+        candidateListLimit: 400
+        cacheMinutes: 720
+        throttlingTimeoutSec: 180
+        split: 1
+
+
+  - name: "position-2-b"
+    apiId: "position-2-b"
+    models:
+      - modelName: "nrms-app-spot"
+        candidateListName: "recsys_candidates_position_1_2_5_b"
+        removeExposed: true
+        candidateListLimit: 400
+        cacheMinutes: 720
+        throttlingTimeoutSec: 120
+        split: 1
+        
+
+  - name: "position-5-a"
+    apiId: "position-5-a"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "manual-ids-dina-ricki"
+        removeExposed: true
+        candidateListLimit: 300
+        cacheMinutes: 720
+        split: 1
+
+  - name: "position-5-b"
+    apiId: "position-5-b"
+    models:
+      - modelName: "nrms-app-spot"
+        candidateListName: "recsys_candidates_position_1_2_5_b"
+        removeExposed: true
+        cacheMinutes: 720
+        throttlingTimeoutSec: 120
+        split: 1
+
+  - name: "position-5-c"
+    apiId: "position-5-c"
+    models:
+      - candidateListName: "manual-ids-dina-ricki"
+        split: 1
+
+  - name: "position-6-a"
+    apiId: "position-6-a"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "recsys_candidates_position_6_a"
+        removeExposed: true
+        candidateListLimit: 300
+        cacheMinutes: 720
+        throttlingTimeoutSec: 180
+        split: 1
+
+  - name: "position-6-b"
+    apiId: "position-6-b"
+    models:
+      - modelName: "nrms-app-spot"
+        candidateListName: "recsys_candidates_position_6_b"
+        removeExposed: true
+        candidateListLimit: 300
+        cacheMinutes: 720
+        split: 1
+
+  # Decomissioned - eventually remove
+  - name: "bag-om-politik"
+    apiId: "bag-om-politik"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "recsys_bag_om_politik"
+        removeExposed: true
+        candidateListLimit: 300
+        cacheMinutes: 720
+        split: 1
+  
+  # Will be placed at somthing like pos 4 and can be throttled
+  - name: "topic-krim"
+    apiId: "topic-krim"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "topic_krim_conversion_shuffled-eng"
+        removeExposed: true
+        candidateListLimit: 300
+        cacheMinutes: 720
+        throttlingTimeoutSec: 80
+        split: 1
+  
+  # Will be placed at somthing like pos 3 and can be throttled
+  # Replacing "bag-om-politik"
+  - name: "topic-health-body"
+    apiId: "topic-health-body"
+    models:
+      - modelName: "nrms-plus-app-spot"
+        candidateListName: "topic_health_body_no_sport_erotics-eng"
+        removeExposed: true
+        candidateListLimit: 300
+        cacheMinutes: 720
+        throttlingTimeoutSec: 60
+        split: 1
+
+candidateLists:
+    - name: "most-popular-24h"
+      type: "engage"
+      id: "most_read_last_24_hours"
+
+    - name: "plus-benchmark"
+      type: "engage"
+      id: "recsys_highest_selling_all_100_7_days_sections_0"
+   
+    - name: "latest-plus-and-mpop-latest-all"
+      type: "engage"
+      id: "recsys_mixed_premium_and_non_premium"
+
+    - name: "plus-candidatelist"
+      type: "engage"
+      id: "recsys_latest_published_premium"
+
+    - name: "mpop-latest-all"
+      type: "engage"
+      id: "recsys_most_read_7_days_all_sections"
+
+    ## Plus engage lists
+    #######################
+    #  Plus engage lists  #
+    #######################
+    
+    - name: "PLUS-Most_read_7"
+      type: "engage"
+      id: "most_read_plus_7_days"
+
+    - name: "PLUS-Most_read_30"
+      type: "engage"
+      id: "most_read_plus_30_days"
+
+    - name: "PLUS-Best_sell_30"
+      type: "engage"
+      id: "most_sold_30_days"
+
+    - name: "PLUS-Best_sell_7"
+      type: "engage"
+      id: "most_sold_7_days"
+
+    - name: "PLUS-New_content_KrimIngenSamliv"
+      type: "engage"
+      id: "most_recent_premium_krim_ingen_adgang_erotik"
+
+    - name: "PLUS-Best_sell_30-shuffled"
+      type: "engage"
+      id: "most_sold_30_days_random"
+
+    ########################################
+    #  new customers first 48 hours lists  #
+    ########################################
+    - name: "most_read_30_days_premium_by_sections_565"
+      type: "engage"
+      id: "most_read_30_days_premium_by_sections_565"
+
+    - name: "most_read_30_days_premium_by_sections_140"
+      type: "engage"
+      id: "most_read_30_days_premium_by_sections_140"
+
+    - name: "most_read_30_days_premium_by_sections_142"
+      type: "engage"
+      id: "most_read_30_days_premium_by_sections_142"
+
+    - name: "most_read_30_days_premium_by_sections_457_539_529"
+      type: "engage"
+      id: "most_read_30_days_premium_by_sections_457_539_529"
+
+    - name: "most_read_30_days_premium_by_sections_118_2731"
+      type: "engage"
+      id: "most_read_30_days_premium_by_sections_118_2731"
+
+    - name: "most_read_30_days_premium_by_sections_414_498"
+      type: "engage"
+      id: "most_read_30_days_premium_by_sections_414_498"
+
+    ###########################
+    #  Manual candidatelists  #
+    ###########################
+
+    - name: "manual-ids-dina-ricki"
+      type: "static"
+      id: "this-doesnt-matter"
+      shuffle: true
+      articles: [9349120, 9428994, 8007684, 9310212, 5564424, 9402377, 9492493, 9392145, 9410577, 9465878, 9463833, 9465881, 9424922, 9494556, 9316385, 9445412,
+        9412651, 9340973, 9236526, 9412654, 9398323, 9402423, 9408569, 9455674, 9383994, 9445437, 9336894, 9384004, 9230405, 9476171, 8882254, 9467983, 9449555,
+        9388123, 8558684, 9443420, 9302111, 9089120, 9365600, 9465953, 9412711, 8409193, 9175145, 9384041, 9341034, 9355377, 9363570, 9222259, 9443447, 7966845,
+        9470078, 9492611, 9470084, 9492619, 9472149, 9449625, 9375916, 9437362, 9470132, 9474230, 5892283, 9095356, 9203901, 9257148, 9384129, 9437385, 9341132,
+        9203920, 9486554, 9490658, 9390308, 9052390, 9435366, 7756007, 9466087, 9079019, 9462004, 9482487, 9427194, 9402619, 9300219, 9150716, 7231743, 9443589,
+        9341193, 9376012, 8134926, 8700175, 9371926, 9111840, 9376034, 9437478, 8972583, 9277736, 9492777, 9095467, 9453867, 9474355, 9142581, 9376054, 9482555,
+        9412927, 9298242, 9345351, 9261390, 8022352, 9371987, 9402709, 9386328, 9482585, 9453912, 7692641, 9449827, 9402726, 9269607, 9320810, 9443691, 9372012,
+        9150834, 9376116, 9464185, 9453947, 9152892, 9382268, 9423230, 7831952, 9413009, 8063379, 9449877, 5921177, 9251227, 9210272, 9423273, 9384369, 9316786,
+        9396660, 9302456, 9316796, 9370044, 9505214, 9425346, 5986757, 9380293, 9368009, 9396681, 9425354, 8018380, 9447881, 9413080, 9372126, 9394654, 9435631,
+        9363956, 9191926, 9402871, 9333240, 9384441, 9406976, 9187841, 9372164, 9443846, 9454092, 9363981, 9370125, 9396749, 6959633, 8532497, 9443862, 9388566,
+        9110039, 9241111, 9396759, 9384474, 9363997, 9396769, 9482791, 6965802, 9019947, 9364014, 9407023, 9384497, 9466422, 9364026, 9472571, 9376315, 9425467,
+        9388608, 9394753, 9394757, 9210441, 9275978, 9220683, 9425491, 9462356, 9402971, 9263713, 9364071, 9321063, 9374325, 9458293, 8362617, 8518266, 9403006,
+        9413252, 9357957, 9386632, 9204368, 9439889, 9364115, 9394836, 6509205, 9398935, 9462424, 8362652, 9448096, 9413293, 9452208, 9396917, 9312949, 9347766,
+        9317048, 9435832, 9317050, 9427647, 9448127, 9448129, 9474763, 8008402, 9454291, 9331413, 9448154, 9482970, 9317086, 9362143, 9376482, 9417444, 9267942,
+        8276712, 9331437, 8164080, 9435888, 9380594, 9317109, 8825592, 9327352, 9448196, 8276744, 9376521, 9464586, 9310988, 9503501, 9313051, 9452324, 9358121,
+        9327402, 9435947, 9440043, 9417521, 9251637, 9351989, 9233208, 7865155, 8887108, 9376584, 9200460, 8440656, 9229136, 7377747, 9374550, 9397080, 9452380,
+        9403240, 9356137, 9431915, 9452396, 9384813, 9423725, 9448302, 9448314, 9229180, 9417598, 9440128, 9005955, 8426373, 9452425, 9393034, 9417621, 9130902,
+        9327511, 9434009, 9075622, 9401255, 9491370, 9448364, 9407405, 9327541, 9405369, 7795643, 9331643, 7783361, 9462726, 9489354, 9356238, 9423822, 8586192,
+        9370577, 8506323, 9407446, 9397207, 9331676, 9407452, 9382880, 9145316, 6865899, 9395179, 9378797, 9321454, 7474162, 9331698, 9417719, 9339896, 9407487,
+        8952833, 7629829, 9268234, 9423887, 9339920, 9272340, 6833183, 9473058, 9288740, 8660008, 9366571, 9464880, 9483314, 9397301, 9393211, 9172028, 9462844,
+        9337923, 9370694, 7476297, 9409612, 6956110, 9464911, 9436238, 6952016, 9397335, 9448535, 9499738, 9270363, 9321563, 9440347, 9440352, 9407584, 9178211,
+        9405539, 9276518, 9417830, 9405543, 9376877, 9301117, 9464962, 9346184, 9397389, 9321616, 9350294, 9391254, 9462935, 9405598, 8561824, 9327777, 8729763,
+        9366691, 9161892, 9378990, 9452721, 9419962, 9473210, 9405628, 9446592, 9460933, 8385746, 9413852, 9458912, 6739176, 9102576, 9477361, 9460984, 9368827,
+        9440508, 8123649, 9424134, 9458953, 9168144, 9430295, 9311516, 9446687, 9391394, 9262372, 9372964, 6141222, 9504043, 9356591, 9131312, 9186608, 9366839,
+        9055548, 9391421, 9393472, 9366852, 9487684, 9297223, 9373000, 9299282, 9391442, 8916320, 9446756, 7695717, 9434469, 9432425, 6856042, 9504105, 8813937,
+        9487729, 9293171, 9418099, 6874485, 9076088, 8355195, 9418107, 9354622, 9475456, 9411969, 9391490, 9276803, 9487749, 9420172, 7249295, 9393553, 9418130,
+        9276819, 9391517, 9368990, 9395621, 9287091, 9297333, 9498042, 9061821, 8758718, 9459136, 9121218, 9084355, 9420226, 6571460, 9459143, 9496008, 9317841,
+        9444821, 9446869, 9432542, 9231841, 9459174, 9434608, 9321968, 9162229, 7300605, 9483777, 9487873, 9055748, 5948949, 9219607, 8214040, 9135641, 9498153,
+        9500202, 9391664, 7880240, 9420341, 9434678, 9434684, 8560195, 8494663, 9322058, 9483850, 9330254, 9487954, 9459286, 9447001, 9420383, 9199203, 9457251,
+        9346664, 9459305, 9418347, 9485931, 9485944, 9404032, 9483905, 9168512, 9330306, 8543881, 9447063, 9279128, 9434782, 9428643, 9275045, 9426600, 9281193,
+        9389737, 7157432, 9477823, 9373388, 9393872, 9412307, 9367252, 9445081, 6252250, 9428704, 9371365, 8396520, 9240302, 8885999, 8990449, 9330424, 9486080,
+        9121540, 9438984, 9449226, 9424655, 9361175, 9287448, 9226010, 9455386, 9355046, 9371430, 9387816, 9465644, 9469742, 9193263, 9494319, 9203516, 9494338,
+        9436997, 9391945, 9295693, 9416525, 9176912, 9488208, 9424722, 9412437, 9488213, 9500505, 9295706, 9451362, 9400164, 9082735, 9475956, 9484153, 9469825,
+        9156483, 9467780, 9496454, 9496459, 9478032, 8697746, 9385876, 9267092, 9416597, 9430932, 9443221, 8312734, 9494434, 9443237, 9168809, 9365418, 9418668,
+        9385902, 9445305, 9430974, 9385919, 9412544, 9402310, 9424838, 9097165, 9455566, 9465810, 8435669, 9306072, 9392089, 9316314, 9385950, 9385951, 9388004,
+        9099237, 9349097, 9385966, 9353199, 9203696, 9455602, 9261043, 9492468, 9287678]
+      forbidden:
+        articles: [5564424, 6141222, 6252250, 6833183, 6865899, 6956110, 7231743, 7474162, 7476297, 7692641, 7695717, 7795643, 7831952, 8007684, 8018380, 8022352,
+          8063379, 8164080, 8276744, 8385746, 8409193, 8518266, 8660008, 8729763, 8972583, 9052390, 9055548, 9055748, 9084355, 9095356, 9095467, 9102576, 9121218,
+          9131312, 9145316, 9156483, 9172028, 9175145, 9176912, 9191926, 9193263, 9199203, 9203696, 9203901, 9203920, 9210272, 9210441, 9220683, 9231841, 9236526,
+          9240302, 9251637, 9268234, 9269607, 9275978, 9276518, 9276803, 9276819, 9279128, 9287091, 9287448, 9287678, 9293171, 9295693, 9295706, 9298242, 9299282,
+          9306072, 9310988, 9313051, 9316786, 9316796, 9317048, 9317050, 9317086, 9322058, 9327777, 9330424, 9331643, 9331676, 9331698, 9336894, 9339920, 9345351,
+          9349120, 9350294, 9353199, 9354622, 9356137, 9362143, 9363956, 9363981, 9363997, 9364014, 9364026, 9364071, 9364115, 9366691, 9367252, 9368990, 9370044,
+          9370577, 9370694, 9375916, 9376012, 9384129, 9384441, 9384813, 9385876, 9385902, 9385951, 9391517, 9391664, 9391945, 9392145, 9394753, 9396917, 9398935,
+          9401255, 9402377, 9402619, 9402726, 9402971, 9404032, 9413080, 9413252, 9417444, 9417521, 9417719, 9420172, 9420226, 9420341, 9420383, 9423887, 9424134,
+          9428643, 9428704, 9428994, 9434608, 9434782, 9440352, 9443691, 9443846, 9443862, 9445412, 9446592, 9447001, 9449226, 9449555, 9455602, 9455674, 9458912,
+          9463833, 9464880, 9464911, 9464962, 9467983, 9470084, 9472571, 9477361, 9482487, 9482555, 9482585, 9483905, 9485944, 9487954, 9489354, 9494319, 9494556]
+        max_rate: 0.25
+
+    #########################################
+    #  New candidatelists for scaling test  #
+    #########################################
+
+    - name: "recsys_candidates_position_1_2_a"
+      type: "engage"
+      id: "recsys_candidates_position_1_2_a"
+
+    - name: "recsys_candidates_position_1_2_5_b"
+      type: "engage"
+      id: "recsys_candidates_position_1_2_5_b"
+
+    - name: "recsys_candidates_position_6_a"
+      type: "engage"
+      id: "recsys_candidates_position_6_a"
+
+    - name: "recsys_candidates_position_6_b"
+      type: "engage"
+      id: "recsys_candidates_position_6_b"
+
+    - name: "recsys_bag_om_politik"
+      type: "engage"
+      id: "recsys_bag_om_politik"
+    
+    - name: "topic_health_body_no_sport_erotics-eng"
+      type: "engage"
+      id: "topic_health_body_no_sport_erotics-eng"
+
+    - name: "topic_krim_conversion_shuffled-eng"
+      type: "engage"
+      id: "topic_krim_conversion_shuffled-eng"
+
+    #- name: "latest-published-plus-shuffled"
+      #type: "engage"
+      #shuffle: true
+      #id: "latest_published_premium"
+
+    #- name: "latest-published-shuffled"
+      #type: "engage"
+      #shuffle: true
+      #id: "latest_published_all_sections"
+
+    #- name: "latest-published"
+      #type: "engage"
+      #id: "latest_published_all_sections"
+      
+    #- name: "random-latest-all"
+      #type: "engage"
+      #shuffle: true
+      #id: "recsys_most_read_7_days_all_sections"
+
+
+    ## ----
+    ## mpop and random are same articles, but different order
+    #
+    #- name: "random-latest-250-nyheder"
+      #type: "engage"
+      #id: "recsys_most_recent_nyheder_random"
+
+    #- name: "random-latest-250-sport"
+      #type: "engage"
+      #id: "recsys_most_recent_sport_random"
+
+    #- name: "random-latest-250-underholdning"
+      #type: "engage"
+      #id: "recsys_most_recent_underholdning_random"
+
+    #- name: "random-latest-250-forbrug"
+      #type: "engage"
+      #id: "recsys_most_recent_forbrug_random"
+
+    #- name: "random-latest-250-nationen"
+      #type: "engage"
+      #id: "recsys_most_recent_nationen_random"
+
+    #- name: "mpop-latest-250-nyheder"
+      #type: "engage"
+      #id: "recsys_most_recent_nyheder_most_popular"
+
+    #- name: "mpop-latest-250-sport"
+      #type: "engage"
+      #id: "recsys_most_recent_sport_most_popular"
+
+    #- name: "mpop-latest-250-underholdning"
+      #type: "engage"
+      #id: "recsys_most_recent_underholdning_most_popular"
+
+    #- name: "mpop-latest-250-forbrug"
+      #type: "engage"
+      #id: "recsys_most_recent_forbrug_most_popular"
+
+    #- name: "mpop-latest-250-nationen"
+      #type: "engage"
+      #id: "recsys_most_recent_nationen_most_popular"
+    
+
+models:
+    - name: "simple-cosine-article-similarity"
+      url: "https://eb-ml-pipeline-prod.com/similarity-app/predict-document/"
+      health: "https://eb-ml-pipeline-prod.com/similarity-app/health/"
+    
+    - name: "contrastive-similarity-prod"
+      url: "https://eb-ml-pipeline-prod.com/similarity-app/predict/"
+      health: "https://eb-ml-pipeline-prod.com/similarity-app/health/"
+    
+    - name: "contrastive-similarity-dev"
+      url: "https://eb-ml-pipeline-prod.com/similarity-dev/predict/"
+      health: "https://eb-ml-pipeline-prod.com/similarity-dev/health/"
+
+    - name: "tag-article-similarity"
+      url: "https://eb-ml-pipeline-prod.com/similarity-app-tags/predict/"
+      health: "https://eb-ml-pipeline-prod.com/similarity-app-tags/health/"
+
+    - name: "recommender-lightfm"
+      url: "https://eb-ml-pipeline-prod.com/collabfiltapp/predict/"
+      health: "https://eb-ml-pipeline-prod.com/collabfiltapp/health/"
+    
+    # - name: "lightfm-spot"
+    #   url: "https://eb-ml-pipeline-prod.com/collabfilt-spot/predict/"
+    #   health: "https://eb-ml-pipeline-prod.com/collabfilt-spot/health/"
+
+    # - name: "nrms-plus-app"
+    #   url: "https://eb-ml-pipeline-prod.com/nrmsplusapp/predict/"
+    #   health: "https://eb-ml-pipeline-prod.com/nrmsplusapp/health/"
+
+    - name: "nrms-plus-app-spot"
+      url: "https://eb-ml-pipeline-prod.com/nrmsplusapp-spot/predict/"
+      health: "https://eb-ml-pipeline-prod.com/nrmsplusapp-spot/health/"
+
+    #- name: "nrms-plus-app-history-hack"
+      #url: "https://eb-ml-pipeline-prod.com/nrmsplusapp/predict3/"
+      #health: "https://eb-ml-pipeline-prod.com/nrmsplusapp/health/"
+
+    # - name: "nrms-app"
+    #   url: "https://eb-ml-pipeline-prod.com/ebnrmsapp/predict/"
+    #   health: "https://eb-ml-pipeline-prod.com/ebnrmsapp/health/"
+
+    - name: "nrms-app-spot"
+      url: "https://eb-ml-pipeline-prod.com/ebnrmsapp-spot/predict/"
+      health: "https://eb-ml-pipeline-prod.com/ebnrmsapp-spot/health/"
+
+    # - name: "drautoedition-app"
+    #   url: "https://eb-ml-pipeline-prod.com/dredition-auto-app/auto-deck-recsys?nitems=8"
+    #   health: "https://eb-ml-pipeline-prod.com/dredition-auto-app/health/"
+
+    #- name: "nrms-app-plus-hack"
+      #url: "https://eb-ml-pipeline-prod.com/ebnrmsapp/predict2/"
+      #health: "https://eb-ml-pipeline-prod.com/ebnrmsapp/health/"
+
+    #- name: "sota-recommender-lstur"
+      #url: "https://eb-ml-pipeline-prod.com/eblsturapp/predict/"
+      #health: "https://eb-ml-pipeline-prod.com/eblsturapp/health/"
+
+    #- name: "sota-recommender-nfm"
+      #url: "https://eb-ml-pipeline-prod.com/ebnfmapp/predict/"
+      #health: "https://eb-ml-pipeline-prod.com/ebnfmapp/health/"
+
+    #- name: "sota-recommender-deepfm"
+      #url: "https://eb-ml-pipeline-prod.com/ebdeepfmapp/predict/"
+      #health: "https://eb-ml-pipeline-prod.com/ebdeepfmapp/health/"
