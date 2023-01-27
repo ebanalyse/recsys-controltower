@@ -52,4 +52,54 @@ class CandidateListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CandidateList
+        fields = '__all__'
+
+
+class ModelServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ModelService
         exclude = ['id']
+
+
+class ConfigurationSerializer(serializers.Serializer):
+    recommender_versions = RecommenderVersionSerializer(many=True)
+    candidate_lists = CandidateListSerializer(many=True)
+    models = ModelServiceSerializer(many=True)
+    inviewAPIEndpoint = serializers.CharField(source="inview_api_endpoint")
+
+    class Meta:
+        fields = ('recommender_versions',
+                  'candidate_lists',
+                  'models',
+                  'inviewAPIEndpoint')
+
+
+if __name__ == "__main__":
+    recommender_versions = models.RecommenderVersion.objects.all()
+    candidate_lists = models.CandidateList.objects.all()
+    models = models.ModelService.objects.all()
+
+    data = {
+        "recommender_versions": recommender_versions,
+        "candidate_lists": candidate_lists,
+        "models": models,
+        "inview_api_endpoint": "https://eb-ml-pipeline-prod.com/inview-api/get-user-blacklist"
+    }
+
+    class ConfigurationSerializer(serializers.Serializer):
+        recommender_versions = RecommenderVersionSerializer(many=True)
+        candidate_lists = CandidateListSerializer(many=True)
+        models = ModelServiceSerializer(many=True)
+        inviewAPIEndpoint = serializers.CharField(source="inview_api_endpoint")
+
+        class Meta:
+            fields = ('recommender_versions',
+                      'candidate_lists',
+                      'models',
+                      'inviewAPIEndpoint')
+
+    from rest_framework.renderers import JSONRenderer
+    JSONRenderer().render(ConfigurationSerializer(data).data)
+    # pprint.pprint(str(YAMLRenderer().render(RecommenderVersionSerializer(
+    # recommender_versions[0]).data)))

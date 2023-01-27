@@ -1,0 +1,176 @@
+<style type="text/css" media="screen">
+    .row.outer {
+        margin-top: 5px;
+        padding: 5px;
+    }
+    .row.outer.ndstyle:nth-child(2n) {
+        /*background: #ccc;*/
+        background: #e9ecef;
+    }
+
+    .add-elm {
+        display: table;
+        cursor: pointer;
+        position: absolute;
+        top: 0%;
+        left: 97%;
+        width: 4%;
+        height: 100%;
+        background-color: green;
+        border-radius: 0 4px 4px 0;
+        font-size: 28px;
+        font-weight: bold;
+        color: #fff;
+    }
+    .add-elm>span {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .comma:not(:empty) ~ .comma:not(:empty):after {
+      content: ",";
+    }
+</style>
+
+
+{% if recommender_versions %}
+{% for recommender_version in recommender_versions %}
+
+{% comment %}<div class="row align-items-center outer">{% endcomment %}
+<div class="row outer ndstyle">
+    <div class="col-3">
+        <div class="card" style="">
+            <div class="card-body" hx-get="{{ request.path }}/{{ recommender_version.id }}" hx-target=".modal-body">
+                {% comment %}<h5 class="card-title">{{recommender_version.name}}</h5>{% endcomment %}
+                <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
+                {% comment %}<p class="card-text">{% endcomment %}
+                <span class="d-block"><b>name:</b> {{recommender_version.name}}</span>
+                <span class="d-block"><b>api_id:</b> {{recommender_version.api_id}}</span>
+                <span class="d-block"><b>cache_key:</b> {{recommender_version.cache_key}}</span>
+                <span class="d-block"><b>model selection timeout:</b> {{recommender_version.model_selection_timeout_min}}m</span>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        {% for segment in recommender_version.segment_matches.all %}
+        {% if not forloop.first %}
+           <hr> 
+        {% endif %}
+        {% comment %}<div class="row align-items-center">{% endcomment %}
+        <div class="row">
+
+            <div class="col">
+
+                <div class="card" style="" hx-sync="closest .card:abort" hx-get="{% url 'segment-matches' recommender_version_id=recommender_version.id segment_match_id=segment.id %}" hx-target=".modal-body">
+                    <div class="card-body position-relative">
+                        {% comment %}<h5 class="card-title">{{ segment.name }}</h5>{% endcomment %}
+                        <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
+                        <span class="d-block"><b>name:</b> {{segment.name}}</span>
+                        <span class="d-block"><b>user_type:</b> {{segment.user_type}}</span>
+                        <span class="d-block"><b>relevance_segment:</b> {{segment.relevance_segment | default_if_none:"-"}}</span>
+                        <!--<a href="#" class="card-link">Card link</a>-->
+                        <!--<a href="#" class="card-link">Another link</a>-->
+                        <div class="add-elm" hx-get="{% url 'model-definitions' recommender_version_id=recommender_version.id segment_match_id=segment.id %}" hx-target=".modal-body" hx-trigger="click" >
+                            <span>+</span>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="col">
+                {% for model_definition in segment.models.all %}
+                <div class="card" style="" hx-get="{% url 'model-definitions' recommender_version_id=recommender_version.id segment_match_id=segment.id model_definition_id=model_definition.id %}"
+                                           hx-target=".modal-body">
+                    <div class="card-body row" style="font-size: 12px">
+                        <div class="col">
+                            <span class="d-block"><b>name:</b> {{model_definition.model.name}}</span>
+                            <span class="d-block"><b>candidate_list:</b> {{model_definition.candidate_list.name|default_if_none:"-"}}</span>
+                            <span class="d-block"><b>fallback_model:</b> {{model_definition.fallback_model.name|default_if_none:"-"}}</span>
+                            <span class="d-block"><b>split:</b> {{model_definition.split}}</span>
+                            {% comment %}<span class="d-block"><b>throttling_timeout_sec:</b> {{model_definition.throttling_timeout_sec}}</span>{% endcomment %}
+                        </div> 
+                        <div class="col">
+                            <span class="comma"><b>candidate_list_limit={{model_definition.candidate_list_limit}}</b></span>
+                            <span class="comma"><b>throttling_timeout_sec={{model_definition.candidate_list_limit}}</b></span>
+                            <span class="comma">{% if model_definition.wait_for_reply %}<b>wait_for_reply</b>{% else %}wait_for_reply{% endif %}</span>
+                            <span class="comma">{% if model_definition.use_context %}<b>use_context</b>{% else %}use_context{% endif %}</span>
+                            <span class="comma">{% if model_definition.use_user_id %}<b>use_user_id</b>{% else %}use_user_id{% endif %}</span>
+                            <span class="comma">{% if model_definition.use_global_cache_key %}<b>use_global_cache_key</b>{% else %}use_global_cache_key{% endif %}</span>
+                            <span class="comma">{% if model_definition.remove_read %}<b>remove_read</b>{% else %}remove_read{% endif %}</span>
+                            <span class="comma">{% if model_definition.remove_exposed %}<b>remove_exposed</b>{% else %}remove_exposed{% endif %}</span>
+                            <span class="comma">{% if model_definition.use_context %}<b>use_context</b>{% else %}use_context{% endif %}</span>
+                            
+                        </div> 
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+
+
+        </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col justify-content-center">
+                <button type="button" class="btn btn-link" hx-get="{% url 'segment-matches' recommender_version_id=recommender_version.id %}" hx-target=".modal-body">Add segment</button>
+            </div>
+            <div class="col">
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+<div class="row" style="margin: 20px 0">
+<button type="button" class="btn btn-outline-secondary" hx-get="{{ request.path }}/-1" hx-target=".modal-body">Add recommender version</button>
+</div>
+<div class="row outer">
+    <div class="col">
+       <h1>CandidateLists</h1>     
+       {% for candidate_list in candidate_lists %}
+       <div class="row outer">
+           <div class="card" style="" hx-sync="closest .card:abort" hx-get="{% url 'candidate-lists' candidate_list.name %}" hx-target=".modal-body">
+               <div class="card-body row">
+                   <div class="col">
+                       <span class="d-block"><b>name:</b> {{ candidate_list.name }}</span>
+                       <span class="d-block"><b>cid:</b> {{ candidate_list.cid }}</span>
+                       <span class="d-block"><b>type:</b> {{ candidate_list.type }}</span>
+                       <span class="d-block"><b>articles: </b> {{ candidate_list.articles | length }}</span>
+                   </div>
+                   <div class="col">
+                       <span class="d-block"><b>forbidden: </b> {{ candidate_list.forbidden.articles | length }}</span>
+                       <span class="d-block"><b>max_rate: </b> {% if candidate_list.forbidden %}{{ candidate_list.forbidden.max_rate }}{% else %} 0{% endif %}</span>
+                       <span class="d-block"><b>shuffle: </b> {{ candidate_list.shuffle }}</span>
+                   </div>
+               </div>
+           </div>
+       </div>
+           
+       {% endfor %}
+    <div class="row" style="margin: 20px 0">
+        <button type="button" class="btn btn-outline-secondary" hx-get="{% url 'candidate-lists' %}"
+            hx-target=".modal-body">Add candidate list</button>
+    </div>
+    </div>        
+    <div class="col">
+       <h1>Services / Models</h1>     
+       {% for model_service in model_services %}
+       <div class="row outer">
+           <div class="card" style="" hx-sync="closest .card:abort" hx-get="{% url 'model-services' model_service_id=model_service.id %}" hx-target=".modal-body">
+               <div class="card-body">
+                       <span class="d-block"><b>name:</b> {{ model_service.name }}</span>
+                       <span class="d-block"><b>url:</b> {{ model_service.url }}</span>
+                       <span class="d-block"><b>health: </b> {{ model_service.health_check_url }}</span>
+               </div>
+           </div>
+       </div>
+           
+       {% endfor %}
+    <div class="row" style="margin: 20px 0">
+        <button type="button" class="btn btn-outline-secondary" hx-get="{% url 'model-services' %}"
+            hx-target=".modal-body">Add model service</button>
+    </div>
+    </div>        
+</div>

@@ -7,8 +7,7 @@ from os import name
 from rest_framework_yaml.renderers import YAMLRenderer
 import pprint
 from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer, YAMLRenderer
-recommender_versions = RecommenderVersion.objects.all()
+# from rest_framework.renderers import JSONRenderer, YAMLRenderer
 
 
 class CandidateListForbiddenFactory(factory.django.DjangoModelFactory):
@@ -177,7 +176,7 @@ if not model_services.exists():
 #############################
 #  Create ModelDefinitions  #
 #############################
-model_definitions = model.ModelDefinition.objects.all()
+model_definitions = models.ModelDefinition.objects.all()
 if not model_definitions.exists():
     model_definition = models.ModelDefinition(
         model=model_services[0],
@@ -290,15 +289,3 @@ if not recommender_versions.exists():
             segments.append(segment_match)
 
         recommender_version.segment_matches.set(segments)
-
-
-# class ConfigurationSerializer(serializers.ModelSerializer):
-    # segment_matches = SegmentMatchSerializer(many=True)
-
-    # class Meta:
-        # model = models.RecommenderVersion
-        # fields = '__all__'
-
-
-# pprint.pprint(str(YAMLRenderer().render(RecommenderVersionSerializer(
-    # recommender_versions[0]).data)))

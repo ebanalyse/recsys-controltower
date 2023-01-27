@@ -1,0 +1,14 @@
+<!--<h1>{{ recommender_version.name }}</h1>-->
+<!--<div>{{ recommender_version.api_id }}</div>-->
+{% load crispy_forms_tags %}
+<!--<form hx-post={% url 'recommender-versions' %} >  [> Do not set action and method <]-->
+{% crispy form %}
+
+
+<!--</form>-->
+
+<script>
+    var modalEl = document.getElementById('modalForForm');
+    var modal = bootstrap.Modal.getInstance(modalEl);
+    if (!modal._isShown) modal.toggle();
+</script>

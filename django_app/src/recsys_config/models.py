@@ -1,5 +1,4 @@
 from django.db import models
-from rest_framework import serializers
 from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
@@ -23,8 +22,8 @@ class CandidateList(models.Model):
         default=ENGAGE
     )
     cid = models.CharField(max_length=255, null=True)  # Id
-    name = models.CharField(primary_key=True, max_length=255)
-    articles = ArrayField(models.IntegerField(), default=list)
+    name = models.CharField(primary_key=True, max_length=255, editable=False)
+    articles = ArrayField(models.IntegerField(), default=list, blank=True)
     # articles = models.ManyToManyField(
     # Article,
     # related_name="candidate_list_articles",
@@ -59,24 +58,28 @@ class ModelDefinition(models.Model):
     candidate_list = models.ForeignKey(
         CandidateList,
         on_delete=models.DO_NOTHING,
-        null=True
+        null=True,
+        blank=True,
     )  # CandidateListName
     fallback_model = models.ForeignKey(
         ModelService,
         on_delete=models.DO_NOTHING,
         related_name="fallback_model",
         null=True,
+        blank=True,
     )
-    split = models.IntegerField()
+    model_name_postfix = models.CharField(
+        max_length=256, default="", blank=True)
+    split = models.IntegerField(default=1)
     wait_for_reply = models.BooleanField()
     use_context = models.BooleanField()
-    cache_minutes = models.IntegerField()
-    candidate_list_limit = models.IntegerField()
-    use_user_id = models.BooleanField()
+    cache_minutes = models.IntegerField(default=180)
+    candidate_list_limit = models.IntegerField(default=0)
+    use_user_id = models.BooleanField(default=True)
     use_global_cache_key = models.BooleanField()
     remove_read = models.BooleanField()
     remove_exposed = models.BooleanField()
-    throttling_timeout_sec = models.IntegerField()
+    throttling_timeout_sec = models.IntegerField(default=20)
 
     def __str__(self):
         return f"{self.model}---{self.candidate_list}"
@@ -90,17 +93,17 @@ class SegmentMatch(models.Model):
     ALL = 'ALL'
     NO_ID_USER = 'NO_CONSENT'
     USER_CHOICES = (
-        (ALL, 'All'),
-        (SSO_ID_USER, 'SSO id user'),
-        (EB_ID_USER, 'EB id user'),
-        (NO_ID_USER, 'No consent'),
+        (ALL, 'ALL'),
+        (SSO_ID_USER, 'SSO'),
+        (EB_ID_USER, 'EB'),
+        (NO_ID_USER, 'NONE'),
     )
 
     name = models.CharField(max_length=255)
     user_type = models.CharField(max_length=20,
                                  choices=USER_CHOICES,
                                  default=ALL)
-    relevance_segment = models.CharField(max_length=255, null=True)
+    relevance_segment = models.CharField(max_length=255, null=True, blank=True)
     models = models.ManyToManyField(
         ModelDefinition,
         related_name="models"
@@ -125,36 +128,6 @@ class RecommenderVersion(models.Model):
     def __str__(self):
         return str(self.name)
 
-#################
-#  Serializers  #
-#################
-
-
-class ModelDefinitionSerializer(serializers.ModelSerializer):
-    model = serializers.StringRelatedField(many=False)
-    candidate_list = serializers.StringRelatedField(many=False)
-    fallback_model = serializers.StringRelatedField(many=False)
-
-    class Meta:
-        model = ModelDefinition
-        fields = '__all__'
-
-
-class SegmentMatchSerializer(serializers.ModelSerializer):
-    models = ModelDefinitionSerializer(many=True)
-
-    class Meta:
-        model = SegmentMatch
-        fields = '__all__'
-
-
-class RecommenderVersionSerializer(serializers.ModelSerializer):
-    segment_matches = SegmentMatchSerializer(many=True)
-
-    class Meta:
-        model = RecommenderVersion
-        fields = '__all__'
-
 
 # TODO: Create this at dump
 # class EbRecSysConfig(models.Model):
@@ -171,9 +144,9 @@ class RecommenderVersionSerializer(serializers.ModelSerializer):
         # related_name="model_services",
     # )
     # inview_api_endpoint = models.CharField(max_length=255)
-    # # s3_bucket = models.CharField(max_length=255)
-    # # model_auth_header = models.CharField(max_length=255)
-    # # environment = models.CharField(max_length=255)
+    # s3_bucket = models.CharField(max_length=255)
+    # model_auth_header = models.CharField(max_length=255)
+    # environment = models.CharField(max_length=255)
 
     # articles = models.
 

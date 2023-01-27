@@ -1,0 +1,8 @@
+{% load crispy_forms_tags %}
+{% crispy form %}
+
+<script>
+    var modalEl = document.getElementById('modalForForm');
+    var modal = bootstrap.Modal.getInstance(modalEl);
+    if (!modal._isShown) modal.toggle();
+</script>
