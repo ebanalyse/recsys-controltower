@@ -57,6 +57,9 @@ urlpatterns = [
     path('recommender-versions/<int:recommender_version_id>/segment-matches/<int:segment_match_id>/model-definitions/<int:model_definition_id>',
          views.ModelDefinitionView.as_view(),
          name="model-definitions"),
+    path('visualize-engage-list/<str:list_name>',
+         views.EngageListVisualView.as_view(),
+         name="visualize-engage-list"),
     # path('model-definitions',
     # views.ModelDefinitionView.as_view(),
     # name="model-definitions")

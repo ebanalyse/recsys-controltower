@@ -40,15 +40,7 @@ class RecommenderVersionSerializer(serializers.ModelSerializer):
         ]
 
 
-class CandidateListForbiddenSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.CandidateListForbidden
-        exclude = ['id']
-
-
 class CandidateListSerializer(serializers.ModelSerializer):
-    forbidden = CandidateListForbiddenSerializer()
 
     class Meta:
         model = models.CandidateList

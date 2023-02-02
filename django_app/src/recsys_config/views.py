@@ -2,6 +2,7 @@
 from rest_framework import viewsets, status
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 from django.http import HttpResponse, JsonResponse, Http404
+import json
 from django.views import View
 from django.views.defaults import bad_request, server_error
 from django.template import loader
@@ -14,6 +15,7 @@ from rest_framework import permissions, status
 from recsys_config.serializers import ConfigurationSerializer, RecommenderVersionSerializer
 from recsys_config import models
 from recsys_config.forms import RecommenderVersionForm, SegmentMatchForm, ModelDefinitionForm, CandidateListForm, ModelServiceForm
+from common.utils import EngageListsAPI, MimisbrunrrAPI
 # Create your views here.
 
 
@@ -303,6 +305,26 @@ class ModelServiceView(APIView):
 #######################
 
 
+class EngageListVisualView(APIView):
+    def get(self, request, list_name):
+        template = "recsys_config/article-list.html"
+        article_ids = EngageListsAPI().get_list(list_name)
+        article_data = MimisbrunrrAPI().get_articles(article_ids)
+        for idx, article in enumerate(article_data):
+            # if article["image_ids"]
+            if idx == 0:
+                print(article)
+            if article['image_ids'] and len(article['image_ids']) > 0:
+                article_data[idx]["image_url"] = \
+                    f"https://ekstrabladet.dk/svc/next/image/{article['id']}/p300/"
+
+        context = {
+            "articles": article_data
+        }
+
+        return render(request=request, template_name=template, context=context)
+
+
 class RecommenderVersionDetail(APIView):
 
     def get_object(self, pk):
@@ -386,15 +408,4 @@ def recsys_config_admin_view(request):
 
     if request.method == 'GET':
         serializer = ConfigurationSerializer(data)
-        # serializer = RecommenderVersionSerializer(
-        # recommender_versions, many=True)
-        # return JsonResponse(serializer.data, safe=False)
-        print(serializer.data)
         return HttpResponse(CamelCaseJSONRenderer().render(serializer.data), headers={"Content-Type": "application/json"})
-
-    # elif request.method == 'PUT':
-        # # serializer = SnippetSerializer(snippet, data=request.data)
-        # # if serializer.is_valid():
-        # # serializer.save()
-        # # return Response(serializer.data)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

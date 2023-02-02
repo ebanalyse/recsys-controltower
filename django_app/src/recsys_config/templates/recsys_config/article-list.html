@@ -1,0 +1,1228 @@
+<style type="text/css" media="screen">
+body {
+    min-width: 320px;
+    background-color: #fff;
+    /*color: #777;*/
+    line-height: 1.6;
+    margin: 0;
+    display: block;
+}
+
+.center {
+    justify-content: center;
+    text-align: center;
+}
+
+#layout {
+    /*padding-left: 160px;*/
+    /*left: 0;*/
+    /*position: relative;*/
+}
+
+/* MENU STYLES */
+/* Add transition to containers so they can push in and out */
+#layout,
+#menu,
+.menu-link {
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+#layout.active .menu-link {
+    left: 160px;
+}
+
+#menu {
+    /*margin-left: -160px; [> "#menu" width <]*/
+    /*width: 160px;*/
+    /*position: fixed;*/
+    top: 0;
+    /*left: 0;*/
+    /*bottom: 0;*/
+    z-index: 1000; /* so the menu or its navicon stays above all content */
+    background: #191818;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+#menu a {
+    color: #999;
+    border: none;
+    white-space: normal;
+    padding: 0.625em 1em;
+}
+
+#menu .pure-menu-open {
+    background: transparent;
+    border: 0;
+}
+
+#menu .pure-menu ul {
+    border: none;
+    background: transparent;
+    /*display: block;*/
+}
+
+#menu .pure-menu ul,
+#menu .pure-menu .menu-item-divided {
+    /*border-top: 1px solid #333;*/
+}
+
+#menu .pure-menu li a:hover,
+#menu .pure-menu li a:focus {
+    background: #333;
+}
+
+.menu-link {
+    position: fixed;
+    display: block; /* show this only on small screens */
+    top: 0;
+    left: 0; /* "#menu width" */
+    background: #000;
+    background: rgba(0,0,0,0.7);
+    font-size: 11px; /* change this value to increase/decrease button size */
+    z-index: 10;
+    width: 4em;
+    height: 4em;
+    padding: 1em;
+}
+
+.menu-link:hover,
+.menu-link:focus {
+    background: #000;
+}
+
+.menu-link span {
+    position: relative;
+    display: block;
+    margin-top: 0.9em;
+}
+
+.menu-link span,
+.menu-link span:before,
+.menu-link span:after {
+    background-color: #fff;
+    width: 100%;
+    height: .2em;
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    transition: all 0.4s;
+}
+
+.menu-link span:before,
+.menu-link span:after {
+    position: absolute;
+    top: -.55em;
+    content: " ";
+}
+
+.menu-link span:after {
+    top: .55em;
+}
+
+.menu-link.active span {
+    background: transparent;
+}
+
+.menu-link.active span:before {
+    -webkit-transform: rotate(45deg) translate(.5em, .4em);
+    -moz-transform: rotate(45deg) translate(.5em, .4em);
+    -ms-transform: rotate(45deg) translate(.5em, .4em);
+    -o-transform: rotate(45deg) translate(.5em, .4em);
+    transform: rotate(45deg) translate(.5em, .4em);
+}
+
+.menu-link.active span:after {
+    -webkit-transform: rotate(-45deg) translate(.4em, -.3em);
+    -moz-transform: rotate(-45deg) translate(.4em, -.3em);
+    -ms-transform: rotate(-45deg) translate(.4em, -.3em);
+    -o-transform: rotate(-45deg) translate(.4em, -.3em);
+    transform: rotate(-45deg) translate(.4em, -.3em);
+}
+
+#menu .pure-menu-heading {
+    font-size: 125%;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: #fff;
+    margin-top: 0;
+    padding: 0.5em 0.8em;
+    text-transform: uppercase;
+}
+#menu .pure-menu-heading:hover,
+#menu .pure-menu-heading:focus {
+    color: #999;
+}
+
+#menu .pure-menu-selected {
+    background: #1f8dd6;
+}
+
+#menu .pure-menu-selected a {
+    color: #fff;
+}
+
+#menu li.pure-menu-selected a:hover,
+#menu li.pure-menu-selected a:focus {
+    background: none;
+}
+
+/* EB colors */
+.bordeaux { background: #8a0c36; color: #fff; }
+.bordeaux.invertColors { color: #8a0c36; }
+.black { background: #000; color: #fff; }
+.black.invertColors { color: #000; }
+.blue { background: #12507b; color: #fff; }
+.blue.invertColors { color: #12507b; }
+.finans { background: #9a2230; color: #fff; }
+.finans.invertColors { color: #9a2230; }
+.green { background: #32a237; color: #fff; }
+.green.invertColors { color: #32a237; }
+.gray { background: #e5e5e5; }
+.native-light { background: #cec4a6 }
+.native-dark { background: #84a8c4 }
+.native-sand { background: #aaa9a1 }
+.orange { background: #e5ad02; color: #fff; }
+.orange.invertColors { color: #e5ad02; }
+.orange-dark { background: #e38121; color: #fff; }
+.orange-dark.invertColors { color: #e38121; }
+.red { background: #bd1118; color: #fff; }
+.red.invertColors { color: #bd1118; }
+.rose { background: #dc7095; color: #fff; }
+.rose.invertColors { color: #dc7095; }
+.white { box-shadow: 0 0 0 1px #efefef; }
+.white.invertColors { color: #fff; background: #000; }
+.yellow { background: #ffff00; }
+.yellow.invertColors { color: #fae500; background: #000; }
+/* END EB colors */
+
+/* EB colors from: https://ekstrabladetudvikling.github.io/eb-colors/ */
+:root {
+  --color--bordeaux: #8a0c36;
+  --fgcolor--bordeaux: #fff;
+
+  --color--reddark: #900;
+  --fgcolor--reddark: #fff;
+
+  --color--red: #bd1118;
+  --fgcolor--red: #fff;
+
+  --color--pink: #b31e61;
+  --fgcolor--pink: #fff;
+
+  --color--rose: #dc7095;
+  --fgcolor--rose: #fff;
+
+  --color--orangedark: #e96c0d;
+  --fgcolor--orangedark: #fff;
+
+  --color--orange: #e5ad02;
+  --fgcolor--orange: #fff;
+
+  --color--yellow: #fae500;
+  --fgcolor--yellow: #fff;
+
+  --color--yellowlight: #ff0;
+  --fgcolor--yellowlight: #000;
+
+  --color--sand: #cec4a6;
+  --fgcolor--sand: #fff;
+
+  --color--greendark: #2f7820;
+  --fgcolor--greendark: #fff;
+
+  --color--green: #029e5d;
+  --fgcolor--green: #fff;
+
+  --color--greenlight: #93b923;
+  --fgcolor--greenlight: #fff;
+
+  --color--lime: #cbfe33;
+  --fgcolor--lime: #000;
+
+  --color--purpledark: #51208c;
+  --fgcolor--purpledark: #fff;
+
+  --color--bluenavy: #1a237e;
+  --fgcolor--bluenavy: #fff;
+
+  --color--bluedark: #1058c2;
+  --fgcolor--bluedark: #fff;
+
+  --color--blue: #31769b;
+  --fgcolor--blue: #fff;
+
+  --color--bluelight: #4fa8df;
+  --fgcolor--bluelight: #fff;
+
+  --color--cyan: #00b6d2;
+  --fgcolor--cyan: #fff;
+
+  --color--sea: #84a8c4;
+  --fgcolor--sea: #fff;
+
+  --color--black: #000;
+  --fgcolor--black: #fff;
+
+  --color--graa1: #3c3c3c;
+  --fgcolor--graa1: #fff;
+
+  --color--graa2: #484848;
+  --fgcolor--graa2: #fff;
+
+  --color--graa3: #999;
+  --fgcolor--graa3: #fff;
+
+  --color--graa4: #c8c8c8;
+  --fgcolor--graa4: #000;
+
+  --color--graa5: #ddd;
+  --fgcolor--graa5: #000;
+
+  --color--graa6: #e5e5e5;
+  --fgcolor--graa6: #000;
+
+  --color--graa7: #efefef;
+  --fgcolor--graa7: #000;
+
+  --color--white: #fff;
+  --fgcolor--white: #000;
+
+  --color--pastel-red: #db5040;
+  --fgcolor--pastel-red: #fff;
+
+  --color--pastel-darkred: #954839;
+  --fgcolor--pastel-darkred: #fff;
+
+  --color--pastel-lightred: #d67e9b;
+  --fgcolor--pastel-lightred: #fff;
+
+  --color--pastel-green: #9fc29c;
+  --fgcolor--pastel-green: #fff;
+
+  --color--pastel-darkgreen: #91a34f;
+  --fgcolor--pastel-darkgreen: #fff;
+
+  --color--pastel-yellow: #d4c564;
+  --fgcolor--pastel-yellow: #fff;
+
+  --color--eb: #bd1118;
+  --fgcolor--eb: #fff;
+
+  --color--eb2: #900;
+  --fgcolor--eb2: #fff;
+
+  --color--breaking: #ff0;
+  --fgcolor--breaking: #000;
+
+  --color--bruger: #4fa8df;
+  --fgcolor--bruger: #fff;
+
+  --color--live: #000;
+  --fgcolor--live: #fff;
+
+  --color--native: #cec4a6;
+  --fgcolor--native: #fff;
+
+  --color--native2: #84a8c4;
+  --fgcolor--native2: #fff;
+
+  --color--facebook: #31769b;
+  --fgcolor--facebook: #fff;
+
+  --color--twitter: #4fa8df;
+  --fgcolor--twitter: #fff;
+
+  --color--flash: #e5ad02;
+  --fgcolor--flash: #fff;
+
+  --color--forbrug: #00b6d2;
+  --fgcolor--forbrug: #fff;
+
+  --color--leder: #1a237e;
+  --fgcolor--leder: #fff;
+
+  --color--livescore: #029e5d;
+  --fgcolor--livescore: #fff;
+
+  --color--livescore2: #cbfe33;
+  --fgcolor--livescore2: #000;
+
+  --color--nyheder: #1058c2;
+  --fgcolor--nyheder: #fff;
+
+  --color--nyheder2: #000;
+  --fgcolor--nyheder2: #fff;
+
+  --color--sex-samliv: #b31e61;
+  --fgcolor--sex-samliv: #fff;
+
+  --color--sex-samliv2: #dc7095;
+  --fgcolor--sex-samliv2: #fff;
+
+  --color--skolefodbold: #93b923;
+  --fgcolor--skolefodbold: #fff;
+
+  --color--sport: #029e5d;
+  --fgcolor--sport: #fff;
+
+  --color--tv: #bd1118;
+  --fgcolor--tv: #fff;
+
+  --color--underholdning: #51208c;
+  --fgcolor--underholdning: #fff;
+
+  --rgb-color--bordeaux: 138, 12, 54;
+  --rgb-fgcolor--bordeaux: 255, 255, 255;
+
+  --rgb-color--reddark: 153, 0, 0;
+  --rgb-fgcolor--reddark: 255, 255, 255;
+
+  --rgb-color--red: 189, 17, 24;
+  --rgb-fgcolor--red: 255, 255, 255;
+
+  --rgb-color--pink: 179, 30, 97;
+  --rgb-fgcolor--pink: 255, 255, 255;
+
+  --rgb-color--rose: 220, 112, 149;
+  --rgb-fgcolor--rose: 255, 255, 255;
+
+  --rgb-color--orangedark: 233, 108, 13;
+  --rgb-fgcolor--orangedark: 255, 255, 255;
+
+  --rgb-color--orange: 229, 173, 2;
+  --rgb-fgcolor--orange: 255, 255, 255;
+
+  --rgb-color--yellow: 250, 229, 0;
+  --rgb-fgcolor--yellow: 255, 255, 255;
+
+  --rgb-color--yellowlight: 255, 255, 0;
+  --rgb-fgcolor--yellowlight: 0, 0, 0;
+
+  --rgb-color--sand: 206, 196, 166;
+  --rgb-fgcolor--sand: 255, 255, 255;
+
+  --rgb-color--greendark: 47, 120, 32;
+  --rgb-fgcolor--greendark: 255, 255, 255;
+
+  --rgb-color--green: 2, 158, 93;
+  --rgb-fgcolor--green: 255, 255, 255;
+
+  --rgb-color--greenlight: 147, 185, 35;
+  --rgb-fgcolor--greenlight: 255, 255, 255;
+
+  --rgb-color--lime: 203, 254, 51;
+  --rgb-fgcolor--lime: 0, 0, 0;
+
+  --rgb-color--purpledark: 81, 32, 140;
+  --rgb-fgcolor--purpledark: 255, 255, 255;
+
+  --rgb-color--bluenavy: 26, 35, 126;
+  --rgb-fgcolor--bluenavy: 255, 255, 255;
+
+  --rgb-color--bluedark: 16, 88, 194;
+  --rgb-fgcolor--bluedark: 255, 255, 255;
+
+  --rgb-color--blue: 49, 118, 155;
+  --rgb-fgcolor--blue: 255, 255, 255;
+
+  --rgb-color--bluelight: 79, 168, 223;
+  --rgb-fgcolor--bluelight: 255, 255, 255;
+
+  --rgb-color--cyan: 0, 182, 210;
+  --rgb-fgcolor--cyan: 255, 255, 255;
+
+  --rgb-color--sea: 132, 168, 196;
+  --rgb-fgcolor--sea: 255, 255, 255;
+
+  --rgb-color--black: 0, 0, 0;
+  --rgb-fgcolor--black: 255, 255, 255;
+
+  --rgb-color--graa1: 60, 60, 60;
+  --rgb-fgcolor--graa1: 255, 255, 255;
+
+  --rgb-color--graa2: 72, 72, 72;
+  --rgb-fgcolor--graa2: 255, 255, 255;
+
+  --rgb-color--graa3: 153, 153, 153;
+  --rgb-fgcolor--graa3: 255, 255, 255;
+
+  --rgb-color--graa4: 200, 200, 200;
+  --rgb-fgcolor--graa4: 0, 0, 0;
+
+  --rgb-color--graa5: 221, 221, 221;
+  --rgb-fgcolor--graa5: 0, 0, 0;
+
+  --rgb-color--graa6: 229, 229, 229;
+  --rgb-fgcolor--graa6: 0, 0, 0;
+
+  --rgb-color--graa7: 239, 239, 239;
+  --rgb-fgcolor--graa7: 0, 0, 0;
+
+  --rgb-color--white: 255, 255, 255;
+  --rgb-fgcolor--white: 0, 0, 0;
+
+  --rgb-color--pastel-red: 219, 80, 64;
+  --rgb-fgcolor--pastel-red: 255, 255, 255;
+
+  --rgb-color--pastel-darkred: 149, 72, 57;
+  --rgb-fgcolor--pastel-darkred: 255, 255, 255;
+
+  --rgb-color--pastel-lightred: 214, 126, 155;
+  --rgb-fgcolor--pastel-lightred: 255, 255, 255;
+
+  --rgb-color--pastel-green: 159, 194, 156;
+  --rgb-fgcolor--pastel-green: 255, 255, 255;
+
+  --rgb-color--pastel-darkgreen: 145, 163, 79;
+  --rgb-fgcolor--pastel-darkgreen: 255, 255, 255;
+
+  --rgb-color--pastel-yellow: 212, 197, 100;
+  --rgb-fgcolor--pastel-yellow: 255, 255, 255;
+
+  --rgb-color--eb: 189, 17, 24;
+  --rgb-fgcolor--eb: 255, 255, 255;
+
+  --rgb-color--eb2: 153, 0, 0;
+  --rgb-fgcolor--eb2: 255, 255, 255;
+
+  --rgb-color--breaking: 255, 255, 0;
+  --rgb-fgcolor--breaking: 0, 0, 0;
+
+  --rgb-color--bruger: 79, 168, 223;
+  --rgb-fgcolor--bruger: 255, 255, 255;
+
+  --rgb-color--live: 0, 0, 0;
+  --rgb-fgcolor--live: 255, 255, 255;
+
+  --rgb-color--native: 206, 196, 166;
+  --rgb-fgcolor--native: 255, 255, 255;
+
+  --rgb-color--native2: 132, 168, 196;
+  --rgb-fgcolor--native2: 255, 255, 255;
+
+  --rgb-color--facebook: 49, 118, 155;
+  --rgb-fgcolor--facebook: 255, 255, 255;
+
+  --rgb-color--twitter: 79, 168, 223;
+  --rgb-fgcolor--twitter: 255, 255, 255;
+
+  --rgb-color--flash: 229, 173, 2;
+  --rgb-fgcolor--flash: 255, 255, 255;
+
+  --rgb-color--forbrug: 0, 182, 210;
+  --rgb-fgcolor--forbrug: 255, 255, 255;
+
+  --rgb-color--leder: 26, 35, 126;
+  --rgb-fgcolor--leder: 255, 255, 255;
+
+  --rgb-color--livescore: 2, 158, 93;
+  --rgb-fgcolor--livescore: 255, 255, 255;
+
+  --rgb-color--livescore2: 203, 254, 51;
+  --rgb-fgcolor--livescore2: 0, 0, 0;
+
+  --rgb-color--nyheder: 16, 88, 194;
+  --rgb-fgcolor--nyheder: 255, 255, 255;
+
+  --rgb-color--nyheder2: 0, 0, 0;
+  --rgb-fgcolor--nyheder2: 255, 255, 255;
+
+  --rgb-color--sex-samliv: 179, 30, 97;
+  --rgb-fgcolor--sex-samliv: 255, 255, 255;
+
+  --rgb-color--sex-samliv2: 220, 112, 149;
+  --rgb-fgcolor--sex-samliv2: 255, 255, 255;
+
+  --rgb-color--skolefodbold: 147, 185, 35;
+  --rgb-fgcolor--skolefodbold: 255, 255, 255;
+
+  --rgb-color--sport: 2, 158, 93;
+  --rgb-fgcolor--sport: 255, 255, 255;
+
+  --rgb-color--tv: 189, 17, 24;
+  --rgb-fgcolor--tv: 255, 255, 255;
+
+  --rgb-color--underholdning: 81, 32, 140;
+  --rgb-fgcolor--underholdning: 255, 255, 255;
+}
+.bg--bordeaux {
+  background: var(--color--bordeaux);
+  color: var(--fgcolor--bordeaux);
+}
+.bg--reddark {
+  background: var(--color--reddark);
+  color: var(--fgcolor--reddark);
+}
+.bg--red {
+  background: var(--color--red);
+  color: var(--fgcolor--red);
+}
+.bg--pink {
+  background: var(--color--pink);
+  color: var(--fgcolor--pink);
+}
+.bg--rose {
+  background: var(--color--rose);
+  color: var(--fgcolor--rose);
+}
+.bg--orangedark {
+  background: var(--color--orangedark);
+  color: var(--fgcolor--orangedark);
+}
+.bg--orange {
+  background: var(--color--orange);
+  color: var(--fgcolor--orange);
+}
+.bg--yellow {
+  background: var(--color--yellow);
+  color: var(--fgcolor--yellow);
+}
+.bg--yellowlight {
+  background: var(--color--yellowlight);
+  color: var(--fgcolor--yellowlight);
+}
+.bg--sand {
+  background: var(--color--sand);
+  color: var(--fgcolor--sand);
+}
+.bg--greendark {
+  background: var(--color--greendark);
+  color: var(--fgcolor--greendark);
+}
+.bg--green {
+  background: var(--color--green);
+  color: var(--fgcolor--green);
+}
+.bg--greenlight {
+  background: var(--color--greenlight);
+  color: var(--fgcolor--greenlight);
+}
+.bg--lime {
+  background: var(--color--lime);
+  color: var(--fgcolor--lime);
+}
+.bg--purpledark {
+  background: var(--color--purpledark);
+  color: var(--fgcolor--purpledark);
+}
+.bg--bluenavy {
+  background: var(--color--bluenavy);
+  color: var(--fgcolor--bluenavy);
+}
+.bg--bluedark {
+  background: var(--color--bluedark);
+  color: var(--fgcolor--bluedark);
+}
+.bg--blue {
+  background: var(--color--blue);
+  color: var(--fgcolor--blue);
+}
+.bg--bluelight {
+  background: var(--color--bluelight);
+  color: var(--fgcolor--bluelight);
+}
+.bg--cyan {
+  background: var(--color--cyan);
+  color: var(--fgcolor--cyan);
+}
+.bg--sea {
+  background: var(--color--sea);
+  color: var(--fgcolor--sea);
+}
+.bg--black {
+  background: var(--color--black);
+  color: var(--fgcolor--black);
+}
+.bg--graa1 {
+  background: var(--color--graa1);
+  color: var(--fgcolor--graa1);
+}
+.bg--graa2 {
+  background: var(--color--graa2);
+  color: var(--fgcolor--graa2);
+}
+.bg--graa3 {
+  background: var(--color--graa3);
+  color: var(--fgcolor--graa3);
+}
+.bg--graa4 {
+  background: var(--color--graa4);
+  color: var(--fgcolor--graa4);
+}
+.bg--graa5 {
+  background: var(--color--graa5);
+  color: var(--fgcolor--graa5);
+}
+.bg--graa6 {
+  background: var(--color--graa6);
+  color: var(--fgcolor--graa6);
+}
+.bg--graa7 {
+  background: var(--color--graa7);
+  color: var(--fgcolor--graa7);
+}
+.bg--white {
+  background: var(--color--white);
+  color: var(--fgcolor--white);
+}
+.bg--pastel-red {
+  background: var(--color--pastel-red);
+  color: var(--fgcolor--pastel-red);
+}
+.bg--pastel-darkred {
+  background: var(--color--pastel-darkred);
+  color: var(--fgcolor--pastel-darkred);
+}
+.bg--pastel-lightred {
+  background: var(--color--pastel-lightred);
+  color: var(--fgcolor--pastel-lightred);
+}
+.bg--pastel-green {
+  background: var(--color--pastel-green);
+  color: var(--fgcolor--pastel-green);
+}
+.bg--pastel-darkgreen {
+  background: var(--color--pastel-darkgreen);
+  color: var(--fgcolor--pastel-darkgreen);
+}
+.bg--pastel-yellow {
+  background: var(--color--pastel-yellow);
+  color: var(--fgcolor--pastel-yellow);
+}
+.bg--eb {
+  background: var(--color--eb);
+  color: var(--fgcolor--eb);
+}
+.bg--eb2 {
+  background: var(--color--eb2);
+  color: var(--fgcolor--eb2);
+}
+.bg--breaking {
+  background: var(--color--breaking);
+  color: var(--fgcolor--breaking);
+}
+.bg--bruger {
+  background: var(--color--bruger);
+  color: var(--fgcolor--bruger);
+}
+.bg--live {
+  background: var(--color--live);
+  color: var(--fgcolor--live);
+}
+.bg--native {
+  background: var(--color--native);
+  color: var(--fgcolor--native);
+}
+.bg--native2 {
+  background: var(--color--native2);
+  color: var(--fgcolor--native2);
+}
+.bg--facebook {
+  background: var(--color--facebook);
+  color: var(--fgcolor--facebook);
+}
+.bg--twitter {
+  background: var(--color--twitter);
+  color: var(--fgcolor--twitter);
+}
+.bg--flash {
+  background: var(--color--flash);
+  color: var(--fgcolor--flash);
+}
+.bg--forbrug {
+  background: var(--color--forbrug);
+  color: var(--fgcolor--forbrug);
+}
+.bg--leder {
+  background: var(--color--leder);
+  color: var(--fgcolor--leder);
+}
+.bg--livescore {
+  background: var(--color--livescore);
+  color: var(--fgcolor--livescore);
+}
+.bg--livescore2 {
+  background: var(--color--livescore2);
+  color: var(--fgcolor--livescore2);
+}
+.bg--nyheder {
+  background: var(--color--nyheder);
+  color: var(--fgcolor--nyheder);
+}
+.bg--nyheder2 {
+  background: var(--color--nyheder2);
+  color: var(--fgcolor--nyheder2);
+}
+.bg--sex-samliv {
+  background: var(--color--sex-samliv);
+  color: var(--fgcolor--sex-samliv);
+}
+.bg--sex-samliv2 {
+  background: var(--color--sex-samliv2);
+  color: var(--fgcolor--sex-samliv2);
+}
+.bg--skolefodbold {
+  background: var(--color--skolefodbold);
+  color: var(--fgcolor--skolefodbold);
+}
+.bg--sport {
+  background: var(--color--sport);
+  color: var(--fgcolor--sport);
+}
+.bg--tv {
+  background: var(--color--tv);
+  color: var(--fgcolor--tv);
+}
+.bg--underholdning {
+  background: var(--color--underholdning);
+  color: var(--fgcolor--underholdning);
+}
+.color--bordeaux {
+  color: var(--color--bordeaux);
+}
+.color--reddark {
+  color: var(--color--reddark);
+}
+.color--red {
+  color: var(--color--red);
+}
+.color--pink {
+  color: var(--color--pink);
+}
+.color--rose {
+  color: var(--color--rose);
+}
+.color--orangedark {
+  color: var(--color--orangedark);
+}
+.color--orange {
+  color: var(--color--orange);
+}
+.color--yellow {
+  color: var(--color--yellow);
+}
+.color--yellowlight {
+  color: var(--color--yellowlight);
+}
+.color--sand {
+  color: var(--color--sand);
+}
+.color--greendark {
+  color: var(--color--greendark);
+}
+.color--green {
+  color: var(--color--green);
+}
+.color--greenlight {
+  color: var(--color--greenlight);
+}
+.color--lime {
+  color: var(--color--lime);
+}
+.color--purpledark {
+  color: var(--color--purpledark);
+}
+.color--bluenavy {
+  color: var(--color--bluenavy);
+}
+.color--bluedark {
+  color: var(--color--bluedark);
+}
+.color--blue {
+  color: var(--color--blue);
+}
+.color--bluelight {
+  color: var(--color--bluelight);
+}
+.color--cyan {
+  color: var(--color--cyan);
+}
+.color--sea {
+  color: var(--color--sea);
+}
+.color--black {
+  color: var(--color--black);
+}
+.color--graa1 {
+  color: var(--color--graa1);
+}
+.color--graa2 {
+  color: var(--color--graa2);
+}
+.color--graa3 {
+  color: var(--color--graa3);
+}
+.color--graa4 {
+  color: var(--color--graa4);
+}
+.color--graa5 {
+  color: var(--color--graa5);
+}
+.color--graa6 {
+  color: var(--color--graa6);
+}
+.color--graa7 {
+  color: var(--color--graa7);
+}
+.color--white {
+  color: var(--color--white);
+}
+.color--pastel-red {
+  color: var(--color--pastel-red);
+}
+.color--pastel-darkred {
+  color: var(--color--pastel-darkred);
+}
+.color--pastel-lightred {
+  color: var(--color--pastel-lightred);
+}
+.color--pastel-green {
+  color: var(--color--pastel-green);
+}
+.color--pastel-darkgreen {
+  color: var(--color--pastel-darkgreen);
+}
+.color--pastel-yellow {
+  color: var(--color--pastel-yellow);
+}
+.color--eb {
+  color: var(--color--eb);
+}
+.color--eb2 {
+  color: var(--color--eb2);
+}
+.color--breaking {
+  color: var(--color--breaking);
+}
+.color--bruger {
+  color: var(--color--bruger);
+}
+.color--live {
+  color: var(--color--live);
+}
+.color--native {
+  color: var(--color--native);
+}
+.color--native2 {
+  color: var(--color--native2);
+}
+.color--facebook {
+  color: var(--color--facebook);
+}
+.color--twitter {
+  color: var(--color--twitter);
+}
+.color--flash {
+  color: var(--color--flash);
+}
+.color--forbrug {
+  color: var(--color--forbrug);
+}
+.color--leder {
+  color: var(--color--leder);
+}
+.color--livescore {
+  color: var(--color--livescore);
+}
+.color--livescore2 {
+  color: var(--color--livescore2);
+}
+.color--nyheder {
+  color: var(--color--nyheder);
+}
+.color--nyheder2 {
+  color: var(--color--nyheder2);
+}
+.color--sex-samliv {
+  color: var(--color--sex-samliv);
+}
+.color--sex-samliv2 {
+  color: var(--color--sex-samliv2);
+}
+.color--skolefodbold {
+  color: var(--color--skolefodbold);
+}
+.color--sport {
+  color: var(--color--sport);
+}
+.color--tv {
+  color: var(--color--tv);
+}
+.color--underholdning {
+  color: var(--color--underholdning);
+}
+.border--black {
+  border-color: var(--color--black);
+}
+.border--graa1 {
+  border-color: var(--color--graa1);
+}
+.border--graa2 {
+  border-color: var(--color--graa2);
+}
+.border--graa3 {
+  border-color: var(--color--graa3);
+}
+.border--graa4 {
+  border-color: var(--color--graa4);
+}
+.border--graa5 {
+  border-color: var(--color--graa5);
+}
+.border--graa6 {
+  border-color: var(--color--graa6);
+}
+.border--graa7 {
+  border-color: var(--color--graa7);
+}
+.border--white {
+  border-color: var(--color--white);
+}
+
+    
+</style>
+<style type="text/css" media="screen">
+    
+h1 {
+    margin: 0px;
+    text-align: center;
+}
+
+iframe#article-viewer {
+    height: 90vh;
+    width: 94%;
+}
+
+#uid-search-container {
+    /*position: relative;*/
+    /*width: 387px;*/
+}
+
+#uid-lookup-input::placeholder {
+    color: #ccc;
+}
+
+#uid-lookup-input {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 0;
+    padding-left: 5px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+#uid-lookup-btn {
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+    padding: 0px 10px;
+    margin: 0px;
+    margin-top: -3px;
+}
+
+.article-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.article-link {
+    text-decoration: none;
+}
+
+.article-card {
+    position: relative;
+    width: 250px;
+    height: 200px;
+    /*color: #000;*/
+    /*display: inline-flex;*/
+    box-sizing: border-box;
+    /*border: 1px solid: #777;*/
+    border-radius: 6px;
+    /*background-color: #e5ad02;*/
+    overflow: hidden;
+}
+
+.article-card div {
+    /*display: flex;*/
+}
+
+.article-card .article-title {
+    /*display: flex;*/
+    /*margin-left: 5px;*/
+    font-weight: bold;
+    /*color: #fff;*/
+    text-align: left;
+    padding: 0px 5px;
+}
+
+.article-card img{
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: flex;
+}
+
+
+/*
+ * COLOR PALETTE
+ * 777777
+ * 878D6A
+ * D4C09C
+ * C6B18E
+ * 9A2C2A
+ */
+</style>
+{% load static %}
+
+<div class="row outer ndstyle">
+    <div id="articles" class="article-container">
+        {% for article in articles %}
+        <a class="article-link" href="http://eb.dk/a/{{article.id}}" target="_blank">
+            <div class="article-card" data-section-list="{{ article.section_list |join:","  }}" data-article-id="{{article.id}}"
+                                                                                           data-article-plus="{{article.premium}}">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt=""/>
+                {% else %}
+                <img src="{% static 'no-image.png' %}" alt=""/>
+                {% endif %}
+                <div class="">
+                    <div class="article-title">
+                        {{ article.title }} 
+                    </div>
+                </div>
+            </div> 
+        </a>
+        {% endfor %}
+
+    </div>
+</div>
+
+<script charset="utf-8">
+
+    function determine_classes_from_topsection_id(id_list) {
+        // Get root segment
+        for (var i=0; i < id_list.length; i++) {
+            switch (id_list[i]) {
+                case 414:  // underholdning
+                    return ['bg--underholdning'];
+                case 436:  // tv
+                    return ['bg--tv'];
+                case 142:  // sport
+                    return ['bg--sport'];
+                case 1689:  // skolefodbold
+                    return ['bg--skolefodbold'];
+                case 565:  // sex-samliv
+                    return ['bg--sex-samliv2'];
+                case 572:  // side9
+                    return ['bg--pink'];
+                case 118:  // nyheder
+                    return ['bg--nyheder'];
+                case 128:  // leder
+                    return ['bg--leder'];
+                case 457:  // forbrug
+                    return ['bg--forbrug'];
+                case 529:  // biler
+                    return ['bg--forbrug'];
+                case 422:  // flash
+                    return ['bg--flash'];
+                case 512:  // nationen
+                    return ['bg--orangedark'];
+                case 2077:  // opinionen
+                    return ['bg--black'];
+            }
+        }
+        return ['bg--nyheder'];
+        //return ['yellow', 'invertColors'];
+    }
+
+    articles = document.querySelectorAll(".article-card");
+    articles.forEach((elm) => {
+        {% comment %}class_list = determine_classes_from_topsection_id(id);{% endcomment %}
+        {% comment %}elm.classList.add(...class_list);{% endcomment %}
+        section_l = elm.getAttribute("data-section-list");
+        section_l = section_l.split(",");
+        for (var i = 0; i < section_l.length; i++) {
+            section_l[i] = parseInt(section_l[i])
+        }
+        class_list = determine_classes_from_topsection_id(section_l)
+        elm.classList.add(...class_list);
+
+    });
+
+
+    function create_article_elm(article_obj) {
+        // Extract object
+        var article_id = article_obj["id"];
+        var title = article_obj["title"];
+        var plus = article_obj["plus"];
+        var subtitle = article_obj["subtitle"];
+        //var body = article_obj["body"];
+        //var byline = article_obj["byline"];
+        //var homesection = article_obj["homesection"];
+        var homesection_id = article_obj["homesection_id"];
+        var topsection_id = article_obj["topsection_id"];
+        var image_url = article_obj["imageurl"];
+        //var last_modified = article_obj["last_modified"];
+        var publish_date = article_obj["publishdate"];
+        var url = "http://eb.dk/a/" + article_obj["id"]
+
+        // Get root segment
+        //var url_segments = url.split("/");
+        //var root_path = url_segments[0];
+        //if (root_path === '')
+            //root_path = url_segments[1];
+        //console.log(root_path);
+
+        // Create elements
+        var root_elm = document.createElement("div");
+        var img_elm = document.createElement("img");
+        var content_elm = document.createElement("div");
+        var title_elm = document.createElement("div");
+
+        // Add classes
+        root_elm.classList.add("article-card");
+        title_elm.classList.add("article-title");
+        class_list = determine_classes_from_topsection_id(topsection_id);
+        root_elm.classList.add(...class_list);
+
+        // add data attributes
+        root_elm.setAttribute("data-article-id", article_id);
+        root_elm.setAttribute("data-article-plus", plus);
+
+        // Add content
+        if (image_url == null || image_url === "")
+            img_elm.src = "/static/images/no-image.png";
+        else
+            img_elm.src = image_url;
+        title_elm.innerHTML = title;
+
+        // Build element
+        root_elm.appendChild(img_elm);
+        content_elm.appendChild(title_elm);
+        root_elm.appendChild(content_elm);
+
+        return root_elm;
+    }
+    
+    var dict = {{ articles|safe }}
+    console.log(dict[0]);
+    {% comment %}var articles = JSON.parse({{ articles | escapejs }});{% endcomment %}
+
+    {% comment %}article_container = document.getElementById("articles"){% endcomment %}
+    {% comment %}for (var article in articles) {{% endcomment %}
+        {% comment %}[>var x = articles_seen[article];<]{% endcomment %}
+        {% comment %}elm = create_article_elm(article);{% endcomment %}
+        {% comment %}article_container.appendChild(elm);{% endcomment %}
+    {% comment %}}{% endcomment %}
+
+
+</script>

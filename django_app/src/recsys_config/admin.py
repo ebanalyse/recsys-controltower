@@ -1,6 +1,5 @@
 # from django.contrib import admin
 
-# from .models import Article, CandidateListForbidden, EbRecSysConfig, ModelDefinition, ModelService, RecommenderVersion
 
 # # Register your models here.
 # admin.site.register(Article)
@@ -10,10 +9,24 @@
 # admin.site.register(ModelService)
 # admin.site.register(RecommenderVersion)
 
+from .models import CandidateListForbidden, CandidateList, ModelService, ModelDefinition, SegmentMatch, RecommenderVersion
+
+
 from django.contrib import admin
-from django.apps import apps
 
-app = apps.get_app_config('recsys_config')
+#######################
+#  Custom adminviews  #
+#######################
 
-for model_name, model in app.models.items():
-    admin.site.register(model)
+
+class AdminSegmentMatch(admin.ModelAdmin):
+    model = SegmentMatch
+    list_display = ("id", "name")
+
+
+admin.site.register(CandidateListForbidden)
+admin.site.register(CandidateList)
+admin.site.register(ModelService)
+admin.site.register(ModelDefinition)
+admin.site.register(RecommenderVersion)
+admin.site.register(SegmentMatch, AdminSegmentMatch)

@@ -22,13 +22,15 @@ class CandidateList(models.Model):
         default=ENGAGE
     )
     cid = models.CharField(max_length=255, null=True)  # Id
-    name = models.CharField(primary_key=True, max_length=255, editable=False)
+    name = models.CharField(primary_key=True, max_length=255)
     articles = ArrayField(models.IntegerField(), default=list, blank=True)
     # articles = models.ManyToManyField(
     # Article,
     # related_name="candidate_list_articles",
     # )
     shuffle = models.BooleanField()
+    # forbidden = ArrayField(models.IntegerField(), default=list, blank=True)
+    # max_rate_forbidden = models.FloatField(blank=True, null=True)
     forbidden = models.ForeignKey(
         CandidateListForbidden,
         models.SET_NULL,

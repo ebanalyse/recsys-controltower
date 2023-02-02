@@ -135,7 +135,7 @@
                <div class="card-body row">
                    <div class="col">
                        <span class="d-block"><b>name:</b> {{ candidate_list.name }}</span>
-                       <span class="d-block"><b>cid:</b> {{ candidate_list.cid }}</span>
+                       <span class="d-block"><b>cid:</b> <a href="{% url 'visualize-engage-list' candidate_list.cid %}" target="_blank">{{ candidate_list.cid }}</a></span>
                        <span class="d-block"><b>type:</b> {{ candidate_list.type }}</span>
                        <span class="d-block"><b>articles: </b> {{ candidate_list.articles | length }}</span>
                    </div>

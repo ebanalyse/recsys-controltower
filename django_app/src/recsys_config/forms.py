@@ -1,8 +1,8 @@
+from crispy_forms.layout import Submit, Button, Field, BaseInput, Fieldset, Layout
+from crispy_forms.helper import FormHelper
 from django.forms import ModelForm
 from django.urls import reverse_lazy, reverse
-from .models import RecommenderVersion, SegmentMatch, ModelDefinition, CandidateList, ModelService
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Button
+from .models import RecommenderVersion, SegmentMatch, ModelDefinition, CandidateList, ModelService, CandidateListForbidden
 
 
 class RecommenderVersionForm(ModelForm):
@@ -164,6 +164,12 @@ class ModelDefinitionForm(ModelForm):
         )
 
 
+class CandidateListForbiddenForm(ModelForm):
+    class Meta:
+        model = CandidateListForbidden
+        fields = "__all__"
+
+
 class CandidateListForm(ModelForm):
     class Meta:
         model = CandidateList
@@ -191,6 +197,11 @@ class CandidateListForm(ModelForm):
                 'candidate-lists')
 
         self.helper.attrs = helper_attrs
+
+        # self.helper[] = Layout(
+            # Fieldset("Forbidden articles",
+                     # )
+        # )
 
         self.helper.add_input(
             Submit('submit',
