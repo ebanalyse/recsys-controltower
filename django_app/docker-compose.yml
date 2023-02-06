@@ -17,6 +17,8 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+    stdin_open: true
+    tty: true
     environment:
       - ENV=local
       - DJANGO_DB_HOST=db

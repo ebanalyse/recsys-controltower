@@ -8,20 +8,26 @@ class CandidateListForbidden(models.Model):
     articles = ArrayField(models.IntegerField(), default=list)
     max_rate = models.FloatField()
 
+    def update(self, commit=False, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if commit:
+            self.save()
+
 
 class CandidateList(models.Model):
-    ENGAGE = 'EN'
-    STATIC = 'ST'
+    ENGAGE = 'engage'
+    STATIC = 'static'
     LIST_TYPES = (
         (ENGAGE, 'engage'),
         (STATIC, 'static')
     )
     type = models.CharField(
-        max_length=2,
+        max_length=16,
         choices=LIST_TYPES,
         default=ENGAGE
     )
-    cid = models.CharField(max_length=255, null=True)  # Id
+    cid = models.CharField(max_length=255, null=True, blank=True)  # Id
     name = models.CharField(primary_key=True, max_length=255)
     articles = ArrayField(models.IntegerField(), default=list, blank=True)
     # articles = models.ManyToManyField(
@@ -41,6 +47,12 @@ class CandidateList(models.Model):
     def __str__(self):
         return str(self.name)
 
+    def update(self, commit=False, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if commit:
+            self.save()
+
 
 class ModelService(models.Model):
     name = models.CharField(max_length=255)
@@ -56,6 +68,7 @@ class ModelDefinition(models.Model):
         ModelService,
         on_delete=models.DO_NOTHING,
         null=True,
+        blank=True,
     )
     candidate_list = models.ForeignKey(
         CandidateList,
@@ -93,7 +106,7 @@ class SegmentMatch(models.Model):
     SSO_ID_USER = 'SSO_ID'
     EB_ID_USER = 'EB_ID'
     ALL = 'ALL'
-    NO_ID_USER = 'NO_CONSENT'
+    NO_ID_USER = 'NO_ID'
     USER_CHOICES = (
         (ALL, 'ALL'),
         (SSO_ID_USER, 'SSO'),
@@ -119,8 +132,8 @@ class SegmentMatch(models.Model):
 class RecommenderVersion(models.Model):
     name = models.CharField(max_length=255)
     api_id = models.CharField(max_length=255)
-    cache_key = models.CharField(max_length=255)
-    model_selection_timeout_min = models.IntegerField()
+    cache_key = models.CharField(max_length=255, blank=True, default="")
+    model_selection_timeout_min = models.IntegerField(default=30)
     allow_unhealthy = models.BooleanField()
     segment_matches = models.ManyToManyField(
         SegmentMatch,

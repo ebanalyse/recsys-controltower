@@ -29,6 +29,10 @@
     .comma:not(:empty) ~ .comma:not(:empty):after {
       content: ",";
     }
+
+    .card-body.recom-model {
+        padding: 7px 14px;
+    }
 </style>
 
 
@@ -82,24 +86,23 @@
                 {% for model_definition in segment.models.all %}
                 <div class="card" style="" hx-get="{% url 'model-definitions' recommender_version_id=recommender_version.id segment_match_id=segment.id model_definition_id=model_definition.id %}"
                                            hx-target=".modal-body">
-                    <div class="card-body row" style="font-size: 12px">
+                    <div class="card-body row recom-model" style="font-size: 12px">
                         <div class="col">
                             <span class="d-block"><b>name:</b> {{model_definition.model.name}}</span>
                             <span class="d-block"><b>candidate_list:</b> {{model_definition.candidate_list.name|default_if_none:"-"}}</span>
                             <span class="d-block"><b>fallback_model:</b> {{model_definition.fallback_model.name|default_if_none:"-"}}</span>
                             <span class="d-block"><b>split:</b> {{model_definition.split}}</span>
-                            {% comment %}<span class="d-block"><b>throttling_timeout_sec:</b> {{model_definition.throttling_timeout_sec}}</span>{% endcomment %}
+                            <span class="d-block"><b>cache_minutes:</b> {{model_definition.cache_minutes}}</span>
                         </div> 
                         <div class="col">
                             <span class="comma"><b>candidate_list_limit={{model_definition.candidate_list_limit}}</b></span>
-                            <span class="comma"><b>throttling_timeout_sec={{model_definition.candidate_list_limit}}</b></span>
+                            <span class="comma"><b>throttling_timeout_sec={{model_definition.throttling_timeout_sec}}</b></span>
                             <span class="comma">{% if model_definition.wait_for_reply %}<b>wait_for_reply</b>{% else %}wait_for_reply{% endif %}</span>
                             <span class="comma">{% if model_definition.use_context %}<b>use_context</b>{% else %}use_context{% endif %}</span>
                             <span class="comma">{% if model_definition.use_user_id %}<b>use_user_id</b>{% else %}use_user_id{% endif %}</span>
                             <span class="comma">{% if model_definition.use_global_cache_key %}<b>use_global_cache_key</b>{% else %}use_global_cache_key{% endif %}</span>
                             <span class="comma">{% if model_definition.remove_read %}<b>remove_read</b>{% else %}remove_read{% endif %}</span>
                             <span class="comma">{% if model_definition.remove_exposed %}<b>remove_exposed</b>{% else %}remove_exposed{% endif %}</span>
-                            <span class="comma">{% if model_definition.use_context %}<b>use_context</b>{% else %}use_context{% endif %}</span>
                             
                         </div> 
                     </div>

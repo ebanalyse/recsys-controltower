@@ -1,4 +1,5 @@
 # from django.shortcuts import render
+from django.forms import inlineformset_factory
 from rest_framework import viewsets, status
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 from django.http import HttpResponse, JsonResponse, Http404
@@ -14,7 +15,14 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from recsys_config.serializers import ConfigurationSerializer, RecommenderVersionSerializer
 from recsys_config import models
-from recsys_config.forms import RecommenderVersionForm, SegmentMatchForm, ModelDefinitionForm, CandidateListForm, ModelServiceForm
+from recsys_config.forms import (
+    RecommenderVersionForm,
+    SegmentMatchForm,
+    ModelDefinitionForm,
+    CandidateListForm,
+    ModelServiceForm,
+    CandidateListForbiddenForm
+)
 from common.utils import EngageListsAPI, MimisbrunrrAPI
 # Create your views here.
 
@@ -222,7 +230,7 @@ class CandidateListView(APIView):
                 name=candidate_list_name)
             form = CandidateListForm(
                 instance=candidate_list,
-                candidate_list_name=candidate_list_name
+                candidate_list_name=candidate_list_name,
             )
         else:
             form = CandidateListForm()
@@ -232,13 +240,41 @@ class CandidateListView(APIView):
         }
 
         return render(request=request, template_name=template, context=context)
+    # def get(self, request, candidate_list_name):
+        # template = "recsys_config/candidatelist-popup.html"
+        # # CandidateListFormSet = inlineformset_factory(
+            # # CandidateListForbiddenForm,
+            # # CandidateListForm
+        # # )
+
+        # if candidate_list_name is not None:
+            # candidate_list = models.CandidateList.objects.get(
+                # name=candidate_list_name)
+            # form = CandidateListFormSet(instance=candidate_list, candidate_list_name=candidate_list_name)
+            # # form = CandidateListForm(
+                # # instance=candidate_list,
+                # # candidate_list_name=candidate_list_name
+            # # )
+        # else:
+            # # form = CandidateListForm()
+            # form = CandidateListFormSet()
+
+        # context = {
+            # "form": form
+        # }
+
+        # return render(request=request, template_name=template, context=context)
 
     def post(self, request, candidate_list_name):
+        # CandidateListFormSet = inlineformset_factory(
+            # CandidateListForm, CandidateListForbiddenForm)
+        # form = CandidateListFormSet(request.data)
         form = CandidateListForm(
             request.data
         )
         if form.is_valid():
             obj = form.save()
+
             return Response(status=status.HTTP_201_CREATED, headers={"HX-Trigger": "reloadRecList"})
 
     def put(self, request, candidate_list_name):
@@ -390,7 +426,6 @@ def recsys_configuration(request):
         # serializer = RecommenderVersionSerializer(
         # recommender_versions, many=True)
         # return JsonResponse(serializer.data, safe=False)
-        print(serializer.data)
         return HttpResponse(CamelCaseJSONRenderer().render(serializer.data), headers={"Content-Type": "application/json"})
 
 

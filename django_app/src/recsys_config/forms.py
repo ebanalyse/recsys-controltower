@@ -1,8 +1,13 @@
 from crispy_forms.layout import Submit, Button, Field, BaseInput, Fieldset, Layout
+from django.contrib.postgres.forms import SimpleArrayField
 from crispy_forms.helper import FormHelper
 from django.forms import ModelForm
+from django import forms
+from django.forms.utils import ValidationError
 from django.urls import reverse_lazy, reverse
+from rest_framework.utils.model_meta import _get_fields
 from .models import RecommenderVersion, SegmentMatch, ModelDefinition, CandidateList, ModelService, CandidateListForbidden
+from typing import Optional
 
 
 class RecommenderVersionForm(ModelForm):
@@ -165,26 +170,151 @@ class ModelDefinitionForm(ModelForm):
 
 
 class CandidateListForbiddenForm(ModelForm):
+    articles = SimpleArrayField(forms.IntegerField(), widget=forms.Textarea, required=False)
+
     class Meta:
         model = CandidateListForbidden
         fields = "__all__"
 
+class CandidateListForm(forms.Form):
+    type = CandidateList._meta.get_field('type').formfield()
+    name = CandidateList._meta.get_field('name').formfield()
+    cid = CandidateList._meta.get_field('cid').formfield()
+    shuffle = CandidateList._meta.get_field('shuffle').formfield()
+    articles = SimpleArrayField(forms.IntegerField(), widget=forms.Textarea, required=False)
+    forbidden = SimpleArrayField(forms.IntegerField(), widget=forms.Textarea, required=False)
+    max_rate = CandidateListForbidden._meta.get_field('max_rate').formfield()
 
-class CandidateListForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.instance :Optional[CandidateList] = kwargs.pop("instance", None)
+        candidate_list_name = kwargs.pop("candidate_list_name", None)
+        super().__init__(*args, **kwargs)
+
+        self.fields['max_rate'].required = False
+
+        if self.instance:
+            self.fields['type'].initial = self.instance.type
+            self.fields['name'].initial = self.instance.name
+            self.fields['name'].widget.attrs['readonly'] = True
+            self.fields['cid'].initial = self.instance.cid
+            self.fields['shuffle'].initial = self.instance.shuffle
+            self.fields['articles'].initial = self.instance.articles
+            if self.instance.forbidden:
+                self.fields['forbidden'].initial = self.instance.forbidden.articles
+                self.fields['max_rate'].initial = self.instance.forbidden.max_rate
+
+
+        self.helper = FormHelper()
+        self.helper.disable_csrf = True
+        self.helper.form_id = "candiate-list-form"
+
+        helper_attrs = {
+            'hx-target': '#candiate-list-form',
+            'hx-swap': 'outerHTML'
+        }
+
+        if candidate_list_name is not None:
+            helper_attrs['hx-put'] = reverse_lazy(
+                'candidate-lists', args=(candidate_list_name,))
+        else:
+            helper_attrs['hx-post'] = reverse_lazy(
+                'candidate-lists')
+
+        self.helper.attrs = helper_attrs
+
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                'type',
+                'name',
+                'cid',
+                'articles',
+                'shuffle',
+                Fieldset(
+                'Forbidden articles',
+                'forbidden',
+                'max_rate',
+                )
+            ))
+
+        self.helper.add_input(
+            Submit('submit',
+                   'Submit',
+                   data_bs_dismiss="modal",
+                   style="margin-top:10px")
+        )
+        if candidate_list_name is not None:
+            self.helper.add_input(
+                Button('delete',
+                       'Delete',
+                       css_class="btn btn-danger",
+                       style="margin-top:10px",
+                       hx_delete=reverse('candidate-lists',
+                                         args=(candidate_list_name,)),
+                       data_bs_dismiss="modal"))
+
+        self.helper.add_input(
+            Button('close',
+                   'Close',
+                   css_class="btn btn-secondary",
+                   style="margin-top:10px",
+                   data_bs_dismiss="modal")
+        )
+
+    def save(self):
+        data = self.cleaned_data
+        max_rate = data.pop("max_rate", 0.0)
+        if max_rate is None: max_rate = 0.0
+        forbidden_data = {
+            'articles': data.pop("forbidden", []),
+            'max_rate': max_rate
+        }
+
+        print(forbidden_data)
+
+        if self.instance:
+            obj = self.instance
+        else:
+            obj = CandidateList()
+
+        obj.update(commit=True, **data)
+
+        ## Store forbidden obj
+        if self.instance:
+            forbidden = self.instance.forbidden
+        else:
+            forbidden = CandidateListForbidden(**forbidden_data)
+
+        forbidden.update(commit=True, **forbidden_data)
+
+        # forbidden = for.save()
+        obj.forbidden = forbidden
+        # Saving your obj
+        obj.save()
+
+        return obj
+
+
+class DCandidateListForm(ModelForm):
+    articles = SimpleArrayField(forms.IntegerField(), widget=forms.Textarea, required=False)
+    forbidden = SimpleArrayField(forms.IntegerField(), widget=forms.Textarea, required=False)
+    max_rate = forms.FloatField(required=False)
+
     class Meta:
         model = CandidateList
-        exclude = ["models"]
+        exclude = ["models", "forbidden"]
 
     def __init__(self, *args, **kwargs):
         candidate_list_name = kwargs.pop("candidate_list_name", None)
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
+        self.helper = FormHelper()
         # self.helper.form_tag = False
         self.helper.disable_csrf = True
         self.helper.form_id = "candiate-list-form"
         helper_attrs = {
             'hx-target': '#candiate-list-form',
-            'hx-swap': 'outerHTML'
+            'hx-swap': 'outerHTML',
+
         }
 
         # if id is set set action url to: PUT /recommender_versions/<id>
@@ -226,6 +356,30 @@ class CandidateListForm(ModelForm):
                    style="margin-top:10px",
                    data_bs_dismiss="modal")
         )
+
+    def clean(self, *args, **kwargs):
+        super().clean()
+        forbidden = self.cleaned_data.get("forbidden", [])
+        max_rate = self.cleaned_data.get("max_rate")
+
+        if len(forbidden) > 0 and not max_rate:
+            raise ValidationError("max_rate is not set")
+
+
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+
+        if commit:
+
+            ## Store forbidden obj
+            forbidden_form = CandidateListForbiddenForm(self.data)
+            forbidden = forbidden_form.save()
+            obj.forbidden = forbidden
+
+            # Saving your obj
+            obj.save()
+
+        return obj
 
 
 class ModelServiceForm(ModelForm):

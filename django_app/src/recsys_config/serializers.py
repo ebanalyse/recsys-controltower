@@ -3,13 +3,15 @@ from . import models
 
 
 class ModelDefinitionSerializer(serializers.ModelSerializer):
-    model = serializers.StringRelatedField(many=False)
-    candidate_list = serializers.StringRelatedField(many=False)
+    # model = serializers.StringRelatedField(many=False)
+    model_name = serializers.StringRelatedField(source="model")
+    candidate_list_name = serializers.StringRelatedField(
+        source="candidate_list", many=False)
     fallback_model = serializers.StringRelatedField(many=False)
 
     class Meta:
         model = models.ModelDefinition
-        exclude = ['id']
+        exclude = ['id', 'candidate_list']
 
 
 class SegmentMatchSerializer(serializers.ModelSerializer):
@@ -40,7 +42,15 @@ class RecommenderVersionSerializer(serializers.ModelSerializer):
         ]
 
 
+class CandidateListForbiddenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.CandidateListForbidden
+        exclude = ['id']
+
+
 class CandidateListSerializer(serializers.ModelSerializer):
+    forbidden = CandidateListForbiddenSerializer(many=False)
 
     class Meta:
         model = models.CandidateList
