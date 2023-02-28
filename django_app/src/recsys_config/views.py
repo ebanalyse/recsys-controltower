@@ -196,7 +196,7 @@ class ModelDefinitionView(APIView):
             segment_match = models.SegmentMatch.objects.get(
                 id=segment_match_id)
             obj = form.save()
-            segment_match.models.add(obj)
+            segment_match.model_definitions.add(obj)
             segment_match.save()
             return Response(status=status.HTTP_201_CREATED, headers={"HX-Trigger": "reloadRecList"})
 

@@ -64,6 +64,9 @@ class ModelService(models.Model):
 
 
 class ModelDefinition(models.Model):
+    class Meta:
+        ordering = ["created"]
+
     model = models.ForeignKey(
         ModelService,
         on_delete=models.DO_NOTHING,
@@ -95,9 +98,21 @@ class ModelDefinition(models.Model):
     remove_read = models.BooleanField()
     remove_exposed = models.BooleanField()
     throttling_timeout_sec = models.IntegerField(default=20)
+    created = models.DateTimeField(auto_now_add=True)
+    segment_match = models.ForeignKey(
+        "SegmentMatch",
+        related_name="model_definitions",
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return f"{self.model}---{self.candidate_list}"
+
+    def update(self, commit=False, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if commit:
+            self.save()
 
 
 # TODO: create custom "callable" segments, fixed segment for testing
@@ -119,13 +134,14 @@ class SegmentMatch(models.Model):
                                  choices=USER_CHOICES,
                                  default=ALL)
     relevance_segment = models.CharField(max_length=255, null=True, blank=True)
-    models = models.ManyToManyField(
-        ModelDefinition,
-        related_name="models"
+    recommender_version = models.ForeignKey(
+        "RecommenderVersion",
+        related_name="segment_matches",
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
-        return str(self.name)
+        return f"{self.recommender_version.name}---{self.name}"
 
 
 # TODO move cache_key and model_selection_timeout_min to segmentMatches to allow doing experiments at a segment
@@ -135,10 +151,6 @@ class RecommenderVersion(models.Model):
     cache_key = models.CharField(max_length=255, blank=True, default="")
     model_selection_timeout_min = models.IntegerField(default=30)
     allow_unhealthy = models.BooleanField()
-    segment_matches = models.ManyToManyField(
-        SegmentMatch,
-        related_name="segment_matches"
-    )
 
     def __str__(self):
         return str(self.name)

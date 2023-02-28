@@ -83,7 +83,7 @@
 
             </div>
             <div class="col">
-                {% for model_definition in segment.models.all %}
+                {% for model_definition in segment.model_definitions.all %}
                 <div class="card" style="" hx-get="{% url 'model-definitions' recommender_version_id=recommender_version.id segment_match_id=segment.id model_definition_id=model_definition.id %}"
                                            hx-target=".modal-body">
                     <div class="card-body row recom-model" style="font-size: 12px">

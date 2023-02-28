@@ -63,7 +63,7 @@ class RecommenderVersionForm(ModelForm):
 class SegmentMatchForm(ModelForm):
     class Meta:
         model = SegmentMatch
-        exclude = ["models"]
+        exclude = ["model_definitions"]
 
     def __init__(self, *args, **kwargs):
         recommender_version_id = kwargs.pop("recommender_version_id", None)
@@ -117,12 +117,12 @@ class SegmentMatchForm(ModelForm):
 class ModelDefinitionForm(ModelForm):
     class Meta:
         model = ModelDefinition
-        exclude = ["models"]
+        exclude = ["segment_match"]
 
     def __init__(self, *args, **kwargs):
-        recommender_version_id = kwargs.pop("recommender_version_id", None)
-        segment_match_id = kwargs.pop("segment_match_id", None)
-        model_definition_id = kwargs.pop("model_definition_id", None)
+        self.recommender_version_id = kwargs.pop("recommender_version_id", None)
+        self.segment_match_id = kwargs.pop("segment_match_id", None)
+        self.model_definition_id = kwargs.pop("model_definition_id", None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         # self.helper.form_tag = False
@@ -135,12 +135,12 @@ class ModelDefinitionForm(ModelForm):
 
         # if id is set set action url to: PUT /recommender_versions/<id>
         # otherwise: POST /recommender_versions
-        if model_definition_id is not None:
+        if self.model_definition_id is not None:
             helper_attrs['hx-put'] = reverse_lazy(
-                'model-definitions', args=(recommender_version_id, segment_match_id, model_definition_id))
+                'model-definitions', args=(self.recommender_version_id, self.segment_match_id, self.model_definition_id))
         else:
             helper_attrs['hx-post'] = reverse_lazy(
-                'model-definitions', args=(recommender_version_id, segment_match_id))
+                'model-definitions', args=(self.recommender_version_id, self.segment_match_id))
 
         self.helper.attrs = helper_attrs
 
@@ -150,14 +150,14 @@ class ModelDefinitionForm(ModelForm):
                    data_bs_dismiss="modal",
                    style="margin-top:10px")
         )
-        if model_definition_id is not None:
+        if self.model_definition_id is not None:
             self.helper.add_input(
                 Button('delete',
                        'Delete',
                        css_class="btn btn-danger",
                        style="margin-top:10px",
                        hx_delete=reverse('model-definitions',
-                                         args=(recommender_version_id, segment_match_id, model_definition_id)),
+                                         args=(self.recommender_version_id, self.segment_match_id, self.model_definition_id)),
                        data_bs_dismiss="modal"))
 
         self.helper.add_input(
@@ -167,6 +167,23 @@ class ModelDefinitionForm(ModelForm):
                    style="margin-top:10px",
                    data_bs_dismiss="modal")
         )
+
+
+    def save(self):
+        data = self.cleaned_data
+        # __import__('pdb').set_trace()
+
+        if self.instance:
+            obj = self.instance
+        else:
+            obj = ModelDefinition()
+
+        obj.segment_match_id = self.segment_match_id
+
+        obj.update(commit=True, **data)
+
+        obj.save()
+        return obj
 
 
 class CandidateListForbiddenForm(ModelForm):
