@@ -64,6 +64,9 @@ class ModelService(models.Model):
 
 
 class ModelDefinition(models.Model):
+    class Meta:
+        ordering = ["created"]
+
     model = models.ForeignKey(
         ModelService,
         on_delete=models.DO_NOTHING,
@@ -95,6 +98,12 @@ class ModelDefinition(models.Model):
     remove_read = models.BooleanField()
     remove_exposed = models.BooleanField()
     throttling_timeout_sec = models.IntegerField(default=20)
+    created = models.DateTimeField(auto_now_add=True)
+    segment_match = models.ForeignKey(
+        "SegmentMatch",
+        related_name="model_definitions",
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return f"{self.model}---{self.candidate_list}"
@@ -119,10 +128,6 @@ class SegmentMatch(models.Model):
                                  choices=USER_CHOICES,
                                  default=ALL)
     relevance_segment = models.CharField(max_length=255, null=True, blank=True)
-    models = models.ManyToManyField(
-        ModelDefinition,
-        related_name="models"
-    )
 
     def __str__(self):
         return str(self.name)
