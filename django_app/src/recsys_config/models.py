@@ -108,6 +108,12 @@ class ModelDefinition(models.Model):
     def __str__(self):
         return f"{self.model}---{self.candidate_list}"
 
+    def update(self, commit=False, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if commit:
+            self.save()
+
 
 # TODO: create custom "callable" segments, fixed segment for testing
 #       ex. does id start with: a-c
@@ -135,7 +141,7 @@ class SegmentMatch(models.Model):
     )
 
     def __str__(self):
-        return str(self.name)
+        return f"{self.recommender_version.name}---{self.name}"
 
 
 # TODO move cache_key and model_selection_timeout_min to segmentMatches to allow doing experiments at a segment
