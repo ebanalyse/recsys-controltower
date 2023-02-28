@@ -128,6 +128,11 @@ class SegmentMatch(models.Model):
                                  choices=USER_CHOICES,
                                  default=ALL)
     relevance_segment = models.CharField(max_length=255, null=True, blank=True)
+    recommender_version = models.ForeignKey(
+        "RecommenderVersion",
+        related_name="segment_matches",
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return str(self.name)
@@ -140,10 +145,6 @@ class RecommenderVersion(models.Model):
     cache_key = models.CharField(max_length=255, blank=True, default="")
     model_selection_timeout_min = models.IntegerField(default=30)
     allow_unhealthy = models.BooleanField()
-    segment_matches = models.ManyToManyField(
-        SegmentMatch,
-        related_name="segment_matches"
-    )
 
     def __str__(self):
         return str(self.name)

@@ -15,7 +15,7 @@ class ModelDefinitionSerializer(serializers.ModelSerializer):
 
 
 class SegmentMatchSerializer(serializers.ModelSerializer):
-    models = ModelDefinitionSerializer(many=True)
+    models = ModelDefinitionSerializer(source="model_definitions", many=True)
 
     class Meta:
         model = models.SegmentMatch
